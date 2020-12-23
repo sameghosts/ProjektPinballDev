@@ -15,7 +15,7 @@ Ok completely kidding there! But I can imagine its a coin-flip 🤓 🤪 over if
 
 I came up with several ideas of project I thought I could implement and used a D20 to roll for which I would prioritize. 
 
-
+<hr>
 | Game Idea | Game Description | Pros | Cons |
 | -------- | -------- | -------- | ------|
 | Roguelike     | dungeon cralwer iterative/ procedural level design    | could be really simple design and assets, relatively easy game states | implementing the procedural level design and other elements may be difficult |
@@ -23,8 +23,12 @@ I came up with several ideas of project I thought I could implement and used a D
 | Bemani / DDR clone    | Rhythm based keyboard clone of stepmania / DDR. arrows scroll up and you hit them in time and in the right pattern  | Would be simple timing and collision and allows for a lot of stretch goals | Worried about scoring / local storage. Win states are a little trickier and more high score. Will I have enought time to make all the music |
 | Pinball   | basic 2d pinball with adaptive board and animations. | Allows for both changing looping background music and easy objects for collision and movement. Lots of potential for stretch and further implementation. | Will canvas be enough to handle collison and physics simulation. Will I break the browser without storing my sound files in an API? |
 
+<hr>
+
 Ultimately both myself and the dice agree, and, I have chosen to go with pinball.
 I think it will be the right amount of challenging code elements a. I also think that it will be a game that if implemented correctly will be easily playable by anyone who understands basic rules of pinball. This is opposed to other games I was thinking of which might function but not really allow for someone who hasn't built it to know how to play it / play it well.  Pinball enables a progression toward a clear MVP design, many stretch goals and a good project for my portfolio. 
+
+<hr>
 
 ## Process
 - [x] Create Initial Markdown
@@ -40,6 +44,8 @@ I think it will be the right amount of challenging code elements a. I also think
 - [ ] Retesting
 - [ ] Adding multiple level design and stretch goals of a "tilt" mechanic
 
+<hr>
+
 ## Tech Stack
 * Basic HTML and CSS for styling site outside of Game Space
 * Game Space built using HTML 5 Canvas and Javascript funcitonality
@@ -50,6 +56,7 @@ I think it will be the right amount of challenging code elements a. I also think
 * assets sound
 * reach and stretch: port to mobile / desktop in c#(unity) and or java
 
+<hr>
 
 ## Wire frames
 If files do not work use imgur gallery
@@ -61,6 +68,8 @@ If files do not work use imgur gallery
 ![Wireframe Game Canvas Bot](./readme-images/wireframePinball-6-gameCanvasBot.png)
 ![Wireframe Css animaiton window](./readme-images/wireframePinball-7-cssAnimationWindow.png)
 
+<hr>
+
 ## MVP Goals
 My MVP goals are as follows
 * Build a functional pinball game with basic shapes and objects
@@ -71,6 +80,8 @@ My MVP goals are as follows
 * Score system for interaction
 * game states like bonuses and goals
 * At least one background loop of music 
+
+<hr>
 
 ## Stretch Goals
 * cool themes / skins
@@ -90,6 +101,8 @@ My MVP goals are as follows
 * C# port for android / ios 
 * Java web console port 
 
+<hr>
+
 ## Roadblocks 
 * worried about fetching and APIs but certain I can figure it out
 * getting all of my canvas display to work
@@ -102,3 +115,4 @@ My MVP goals are as follows
     *Creating an api / database for my images/sound*
 * stretch sound being too complicated with delay and input lag
 
+<hr>
