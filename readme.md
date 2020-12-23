@@ -2,10 +2,15 @@
 
 For project one I really want to implement a game that uses collision and basic game states/logic that allows me to build on it through stretch goals to showcase some of my own assets including sound design and game music, as well as visual assets 
 
-In this case I thought I would go for something simple, and thus I chose to clone a simple game you might not of heard of called Cyberpunk 2077. Should be a cakewalk.
+In this case I thought I would go for something simple, and thus I chose to clone a simple game you might not of heard of called Cyberpunk 2077.
+<br>
+
+<marquee> Should be a cakewalk. </marquee>
+<hr>
+
 ![](https://i.imgur.com/MpiHBNZ.jpg)
 ![](https://i.imgur.com/l4lZoMn.png)
-
+<hr>
 Ok completely kidding there! But I can imagine its a coin-flip 🤓 🤪 over if my Project 1 or CDPROJEKT RED has more bugs!
 
 I came up with several ideas of project I thought I could implement and used a D20 to roll for which I would prioritize. 
