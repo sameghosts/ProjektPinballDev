@@ -61,13 +61,13 @@ I think it will be the right amount of challenging code elements a. I also think
 
 ## Wire frames
 If files do not work use imgur gallery
-![Wireframe Pinball](./readme-images/wireframepinball-1.png)
-![Wireframe Full Top](./readme-images/wireframepinball-2)
-![Wireframe Full Bottom](./readme-images/wireframepinball-3.png)
-![Wireframe Game Canvas](./readme-images/wireframePinball-4-gameCanvas.png)
-![Wireframe Game Canvas Top](./readme-images/wireframepinball-5-gameCanvasTop)
-![Wireframe Game Canvas Bot](./readme-images/wireframePinball-6-gameCanvassBot)
-![Wireframe Css animaiton window](./readme-images/wireframePinball-7-cssAnimationWindow)
+![Wireframe Pinball](./readme-images/img1.png)
+![Wireframe Full Top](./readme-images/img2.png)
+![Wireframe Full Bottom](./readme-images/img3.png)
+![Wireframe Game Canvas](./readme-images/img4.png)
+![Wireframe Game Canvas Top](./readme-images/img5.png)
+![Wireframe Game Canvas Bot](./readme-images/img6.png)
+![Wireframe Css animaiton window](./readme-images/img7.png)
 
 <hr>
 
