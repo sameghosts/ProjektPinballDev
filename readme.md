@@ -48,10 +48,13 @@ I think it will be the right amount of challenging code elements a. I also think
 
 ## Wire frames
 If files do not work use imgur gallery
-![](https://imgur.com/5eq8wv3)
-![](https://imgur.com/NpvGMjX)
-![](https://imgur.com/470Ruwb)
-![](https://imgur.com/470Ruwb)
+![](./readme-images/wireframepinball-1)
+![](./readme-images/wireframepinball-2)
+![](./readme-images/wireframepinball-3)
+![](./readme-images/wireframepinball-4-gamecanvas)
+![](./readme-images/wireframepinball-5-gamecanvasTop)
+![](./readme-images/wireframepinball-6-gamecanvasBot)
+![](./readme-images/wireframepinball-7-cssAnimationWindow)
 
 ## MVP Goals
 My MVP goals are as follows
