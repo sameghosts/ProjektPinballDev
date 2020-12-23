@@ -102,7 +102,7 @@ My MVP goals are as follows
 * C# port for android / ios 
 * Java web console port 
 
-<hr›>
+<hr>
 
 ## Roadblocks 
 * worried about fetching and APIs but certain I can figure it out
