@@ -16,6 +16,7 @@ Ok completely kidding there! But I can imagine its a coin-flip 🤓 🤪 over if
 I came up with several ideas of project I thought I could implement and used a D20 to roll for which I would prioritize. 
 
 <hr>
+
 | Game Idea | Game Description | Pros | Cons |
 | -------- | -------- | -------- | ------|
 | Roguelike     | dungeon cralwer iterative/ procedural level design    | could be really simple design and assets, relatively easy game states | implementing the procedural level design and other elements may be difficult |
@@ -101,7 +102,7 @@ My MVP goals are as follows
 * C# port for android / ios 
 * Java web console port 
 
-<hr>
+<hr›>
 
 ## Roadblocks 
 * worried about fetching and APIs but certain I can figure it out
