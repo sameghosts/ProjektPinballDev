@@ -48,13 +48,13 @@ I think it will be the right amount of challenging code elements a. I also think
 
 ## Wire frames
 If files do not work use imgur gallery
-![](./readme-images/wireframepinball-1)
-![](./readme-images/wireframepinball-2)
-![](./readme-images/wireframepinball-3)
-![](./readme-images/wireframepinball-4-gamecanvas)
-![](./readme-images/wireframepinball-5-gamecanvasTop)
-![](./readme-images/wireframepinball-6-gamecanvasBot)
-![](./readme-images/wireframepinball-7-cssAnimationWindow)
+![Wireframe Pinball](./readme-images/wireframepinball-1.png)
+![Wireframe Full Top](./readme-images/wireframepinball-2.png)
+![Wireframe Full Bottom](./readme-images/wireframepinball-3.png)
+![Wireframe Game Canvas](./readme-images/wireframepinball-4-gamecanvas.png)
+![Wireframe Game Canvas Top](./readme-images/wireframepinball-5-gamecanvasTop.png)
+![Wireframe Game Canvas Bot](./readme-images/wireframepinball-6-gamecanvasBot.png)
+![Wireframe Css animaiton window](./readme-images/wireframepinball-7-cssAnimationWindow.png)
 
 ## MVP Goals
 My MVP goals are as follows
@@ -78,14 +78,14 @@ My MVP goals are as follows
 * Local Storage
 * multiplayer local
 
-## Super Stretch
+### Super Stretch
 * Turn CSS windows into insane grids to become old school orange / red screen pixel art 
 * multiplayer networked 
 * C# / unity port for app 
 * C# port for android / ios 
 * Java web console port 
 
-# Roadblocks 
+## Roadblocks 
 * worried about fetching and APIs but certain I can figure it out
 * getting all of my canvas display to work
 * getting all of my canvas physics to work
