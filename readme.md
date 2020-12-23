@@ -51,10 +51,10 @@ If files do not work use imgur gallery
 ![Wireframe Pinball](./readme-images/wireframepinball-1.png)
 ![Wireframe Full Top](./readme-images/wireframepinball-2.png)
 ![Wireframe Full Bottom](./readme-images/wireframepinball-3.png)
-![Wireframe Game Canvas](./readme-images/wireframepinball-4-gamecanvas.png)
-![Wireframe Game Canvas Top](./readme-images/wireframepinball-5-gamecanvasTop.png)
-![Wireframe Game Canvas Bot](./readme-images/wireframepinball-6-gamecanvasBot.png)
-![Wireframe Css animaiton window](./readme-images/wireframepinball-7-cssAnimationWindow.png)
+![Wireframe Game Canvas](./readme-images/wireframePinball-4-gameCanvas.png)
+![Wireframe Game Canvas Top](./readme-images/wireframePinball-5-gameCanvasTop.png)
+![Wireframe Game Canvas Bot](./readme-images/wireframePinball-6-gameCanvasBot.png)
+![Wireframe Css animaiton window](./readme-images/wireframePinball-7-cssAnimationWindow.png)
 
 ## MVP Goals
 My MVP goals are as follows
