@@ -44,4 +44,20 @@
 
 // second level
 
-//Determine Browser size
+//Determine Browser size - 
+/*
+ window fullscreen - width: 1920, height: 969
+ window mobile -  
+
+ funcition i used to get it: 
+ */
+function viewport(){
+var e = window, a = 'inner';
+if (!('innerWidth' in window)){
+a = 'client';
+e = document.documentElement || document.body;
+} 
+return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
+}
+
+console.log(viewport());
