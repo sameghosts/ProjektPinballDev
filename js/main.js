@@ -47,10 +47,13 @@
 //Determine Browser size - 
 /*
  window fullscreen - width: 1920, height: 969
- window mobile -  
+ window fullscreen dev tools mobile - width: 400, height: 807  
+
+ Should I determine objects in window fullscreen to be mathmaetically convertble to fullscreen mobile? 
+        MAYBE?????? 
 
  funcition i used to get it: 
- */
+*/ 
 function viewport(){
 var e = window, a = 'inner';
 if (!('innerWidth' in window)){
@@ -59,5 +62,4 @@ e = document.documentElement || document.body;
 } 
 return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
 }
-
 console.log(viewport());
