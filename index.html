@@ -1,14 +1,61 @@
-<!-- figure out why your emmet for autocomplete html isnt working  -->
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Projekt Pinball</title>
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
 <!-- Establish main semantic divs for page layout -->
 <!-- Structure: 
-  Main
-  header
-  Css animation windows
-  Game space / canvas 
-  footer
+  X  header (in body title place holder) {div, id="headerContainer"}
+          inside -> {h2, id="headerText"};
+  ____________________________        
+  X  Game Cabinet (Both Game Space and top of cabinet / game animation windows) {div id="gameCabinet"} -> two children divs, top and bottom
+  - - - - - - - - - - - - - - - - 
+  X Game Cabinet Top (both animation windows and divider static){div id="cabinetTop"} -> within left and right aside and middle divider
+    {aside id="leftScreen"}
+    {div id="screenDivider"}
+    {aside id="rightScreen"}
+- - - - - - - - - - - - - - - - 
+X Game Cabinet Bottom (main and canvas, possibility for more) {div id="cabinetBottom"} -> within main canvas and tbd
+  {main no id or element yet}
+  {canvas tag id"game"}
+  __________________
+X Footer {footer id="footerBar"} -> inside pargarph tag placeholder
+-->
+<body>
+  <div id="headerContainer">
+  <h2 id="headerText">Play the Pinball! BE THE PINBALL!</h2>
+  </div>  
+  <div id="gameCabinet">
+    <div id="cabinetTop">
+      <aside id="leftScreen"></aside>
+      <div id="screenDivider"></div>  
+      <aside id="rightScreen"></aside>
+    </div>
+    <div id="cabinetBottom">     
+      <main>
+        <canvas id="game"><!-- play it, a game --></canvas>
+      </main>
+    </div>
+  </div>  
+  
+  <footer id="footerBar">
+    <p> Stuff about my Socials and links</p>
+  </footer>
 
- -->
+</body>
+</html>
+<!-- figure out why your emmet for autocomplete html isnt working  -->
+
+<!--
+  think ive got it now to wireframe
+
+-->
 
 <!-- Make sure all objects and divs are set with semantic identifying classes and IDs that are javascript / css specific -->
 

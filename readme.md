@@ -33,16 +33,22 @@ I think it will be the right amount of challenging code elements a. I also think
 
 ## Process
 - [x] Create Initial Markdown
-- [ ] Tech Stack
-- [ ] MVP Proposal
+- [x] Tech Stack
+- [x] MVP Proposal
 - [ ] Wireframing the Game for MVP deliverable
+- [ ] Updating Readme for New MVP and stretch goals
 - [ ] Creating base game assets / canvas elements / game function and logic
+- [ ] Most basic physics engine
 - [ ] Test and try and break it
-- [ ] local score storage
+- [ ] local storage and scoring
 - [ ] MVP deliverable
-- [ ] implement design assets (textures and sprites)
-- [ ] implementation of sound libraries
+- [ ] Evaluate and analyze MVP and progress
+- [ ] Create Post MVP Plan
+- [ ] Implement design assets (textures, animations, sprites)
+- [ ] Implementation of sound libraries
 - [ ] Retesting
+- [ ] More advanced Physics?
+- [ ] Phone browser version?
 - [ ] Adding multiple level design and stretch goals of a "tilt" mechanic
 
 <hr>

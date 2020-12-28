@@ -9,7 +9,7 @@
     Dead space 
  */
 
-// Map firing pin and flippers to key presses 
+// Map firing pin and flippers to key presses  
       // determine if timeout's are needed 
 
 // Establish collision detection 
@@ -43,3 +43,5 @@
 // add visual elements
 
 // second level
+
+//Determine Browser size

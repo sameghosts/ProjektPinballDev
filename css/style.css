@@ -1,0 +1,13 @@
+html,body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  padding-top: 1em;
+  text-align: center;
+  background-color: chartreuse;
+  /* background-image: url('../img/dungeonhell.png'); */
+  background-size: cover;
+  background-repeat: space;
+  font-family: Arial, Helvetica, sans-serif;
+}
