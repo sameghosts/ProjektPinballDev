@@ -93,14 +93,66 @@ ctx.fillStyle = 'brown';
 ctx.fillRect(500, 175, 15, 435);
 
 //Firing pin 
+let movementFP = 465;
+let movementFPpow = 410;
+let pinX = 520;
 let pinY = 425;
-ctx.fillStyle = 'orange';
-ctx.fillRect(520, pinY, 40, 125);
+let pinWidth = 40;
+let pinHeight = 125;
+let pinColor = 'orange';
+function drawFiringPin(x, y, width, height, color){
+  this.x = x
+  this.y = y
+  this.width = width
+  this.height = height
+  this.color = color
+  this.render = function() {  
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }  
+}
+let firePin = new drawFiringPin(pinX, pinY, pinWidth, pinHeight, pinColor);
+
+// firePin.render();
 
 
 
 // Map firing pin and flippers to key presses  
       // determine if timeout's are needed 
+//firing pin
+function movementFiringPinBack(e) {
+  if (e.keyCode === 70) {
+    console.log(e.key, e.keyCode);
+    firePin.y = movementFP;
+  } 
+}
+function movementFiringPinRelease(e) {
+  if (e.keyCode === 70) {
+    console.log(`key is up`);
+    firePin.y = movementFPpow;
+  } 
+}
+setInterval(function(){
+  ctx.clearRect(0, 0, game.width, game.height);
+  //Initial lane
+  ctx.fillStyle = 'brown';
+  ctx.fillRect(500, 175, 15, 435);
+  //deadspace
+  ctx.fillStyle = 'darkgreen';
+  ctx.fillRect(0, 500, 500, 112);
+  ctx.closePath();
+  //pinball
+  drawPinball (ballX, ballY, radius, ballColor);
+  //left flipper
+  drawInitFlipA (flipAX, flipAY, flipWidth, flipHeight, flipInitAng);
+  //right flipper
+  drawInitFlipB (flipBX, flipBY, flipWidth, flipHeight, -flipInitAng);
+
+  firePin.render();
+}, 1000/60);
+
+document.addEventListener('keydown', movementFiringPinBack);
+document.addEventListener('keyup', movementFiringPinRelease);
 
 // Establish collision detection 
   // pinball and flippers
