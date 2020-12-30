@@ -3,14 +3,15 @@
 let game = document.getElementById('game')
 let leftScreen = document.getElementById('leftScreen')
 let rightScreen = document.getElementById('rightScreen')
-const flipAX = 75;
-const flipAY = 450;
-const flipBX = 300;
-const flipBY = 450;
-const flipBXR = 450;
-const flipBYR = 460;
-const flipWidth = 125;
+const flipAX = 100;
+const flipAY = 375;
+const flipBX = 275;
+const flipBY = 375;
+const flipBXR = flipBX + 135;
+const flipBYR = flipBY + 10;
+const flipWidth = 135;
 const flipHeight = 20;
+const flipInitAng = 45;
 
 // Establish canvas context
 
@@ -29,10 +30,11 @@ game.setAttribute('width', getComputedStyle(game)['width'])
     Firing Pin
     Dead space 
     */
-   //Flippers 
-   //Start with rectangles? then move to series of overlapping circles?
-   // ctx.translate(75 , 450);
-   //Flipper A 
+//Dead Space - use a rectangle 
+    //Flippers 
+//Start with rectangles? then move to series of overlapping circles?
+
+//Flipper A 
 let drawInitFlipA = (x, y, width, height,degrees) => {
   ctx.save();
   ctx.beginPath();
@@ -41,24 +43,26 @@ let drawInitFlipA = (x, y, width, height,degrees) => {
   ctx.rect(x-flipAX, y-flipAY, width, height);
   ctx.fillstyle = 'black';
   ctx.fill();
+  ctx.closePath();
   ctx.translate(0, 0);
   ctx.restore();
 }
-drawInitFlipA (flipAX, flipAY, flipWidth, flipHeight, 30);
+drawInitFlipA (flipAX, flipAY, flipWidth, flipHeight, flipInitAng);
 
 //Flipper B
 let drawInitFlipB = (x, y, width, height,degrees) => {
   ctx.save();
   ctx.beginPath();
-  ctx.translate(flipBXR, flipBYR-10);
+  ctx.translate(flipBXR, flipBYR);
   ctx.rotate(degrees * (Math.PI/180));
   ctx.rect(x-flipBXR, y-flipBYR, width, height);
   ctx.fillstyle = 'black';
   ctx.fill();
+  ctx.closePath();
   ctx.translate(0, 0);
   ctx.restore();
 }
-drawInitFlipB (flipBX, flipBY, flipWidth, flipHeight, -30);
+drawInitFlipB (flipBX, flipBY, flipWidth, flipHeight, -flipInitAng);
 
    //Pinball
 let ballX = 540;
@@ -74,17 +78,10 @@ ctx.strokeStyle = 'black';
 ctx.fillStyle = '#a39d9b';
 ctx.stroke();
 ctx.fill();
+ctx.closePath();
 
-   // ctx.beginPath();
-   // ctx.fillStyle= '#aba8a7';
-   // ctx.arc(50, 50, 20, 0, 2 * Math.PI, false);
-   // ctx.lineWidth= 3;
-   // ctx.strokeStyle= 'blue';
-   // ctx.strokeStyle();
-   // // console.log(ctx.fillRect());
-   
    //Initial lane
-   ctx.fillStyle = 'brown';
+ctx.fillStyle = 'brown';
 ctx.fillRect(500, 175, 15, 435);
 
 //Firing pin 
@@ -93,8 +90,6 @@ ctx.fillStyle = 'orange';
 ctx.fillRect(520, pinY, 40, 125);
 
 
-// ctx.fillStyle = 'black';
-// ctx.fillRect(300, 450, 150, 25);
 
 // Map firing pin and flippers to key presses  
       // determine if timeout's are needed 
