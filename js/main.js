@@ -3,9 +3,9 @@
 let game = document.getElementById('game')
 let leftScreen = document.getElementById('leftScreen')
 let rightScreen = document.getElementById('rightScreen')
-const flipAX = 100;
+const flipAX = 125;
 const flipAY = 375;
-const flipBX = 275;
+const flipBX = 245;
 const flipBY = 375;
 const flipBXR = flipBX + 135;
 const flipBYR = flipBY + 10;
@@ -30,7 +30,10 @@ game.setAttribute('width', getComputedStyle(game)['width'])
     Firing Pin
     Dead space 
     */
-//Dead Space - use a rectangle 
+//Dead Space - use a rectangle for now
+ctx.fillStyle = 'darkgreen';
+ctx.fillRect(0, 500, 500, 112);
+ctx.closePath();
     //Flippers 
 //Start with rectangles? then move to series of overlapping circles?
 
@@ -41,7 +44,7 @@ let drawInitFlipA = (x, y, width, height,degrees) => {
   ctx.translate(flipAX, flipAY);
   ctx.rotate(degrees * (Math.PI/180));
   ctx.rect(x-flipAX, y-flipAY, width, height);
-  ctx.fillstyle = 'black';
+  ctx.fillStyle = 'red';
   ctx.fill();
   ctx.closePath();
   ctx.translate(0, 0);
@@ -56,7 +59,7 @@ let drawInitFlipB = (x, y, width, height,degrees) => {
   ctx.translate(flipBXR, flipBYR);
   ctx.rotate(degrees * (Math.PI/180));
   ctx.rect(x-flipBXR, y-flipBYR, width, height);
-  ctx.fillstyle = 'black';
+  ctx.fillStyle = 'red';
   ctx.fill();
   ctx.closePath();
   ctx.translate(0, 0);
