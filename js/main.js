@@ -136,10 +136,30 @@ function movementFiringPinRelease(e) {
 }
 //flippers 
   //z = keyCode === 90
-  // ? = keyCode === 191
-function movementFlipperUp(e){
-  console.log(e.keyCode);
+  // / = keyCode === 191
+let flipPressMovement = 95;
+let movementFlipper = (e) => {
+  switch (e.keyCode) {
+    case 90:
+      flipperA.degrees -= flipPressMovement
+      break
+    case 191:
+      flipperB.degrees += flipPressMovement
+      break
+  }    
 }
+let movementFlipperDown = (e) => {
+  switch (e.keyCode) {
+    case 90:
+      flipperA.degrees = flipInitAng
+      break
+    case 191:
+      flipperB.degrees = -flipInitAng
+      break
+  }
+}
+//##### working but must figure out how to stop it from fully rotating when key is held down
+
 //canvas loop and redraw
 setInterval(function(){
   ctx.clearRect(0, 0, game.width, game.height);
@@ -162,8 +182,8 @@ setInterval(function(){
 
 document.addEventListener('keydown', movementFiringPinBack);
 document.addEventListener('keyup', movementFiringPinRelease);
-document.addEventListener('keydown', movementFlipperUp);
-// document.addEventListener('keyup', movementFlipperDowm);
+document.addEventListener('keydown', movementFlipper);
+document.addEventListener('keyup', movementFlipperDown);
 
 
 // Establish collision detection 
