@@ -3,15 +3,7 @@
 let game = document.getElementById('game')
 let leftScreen = document.getElementById('leftScreen')
 let rightScreen = document.getElementById('rightScreen')
-const flipAX = 125;
-const flipAY = 375;
-const flipBX = 245;
-const flipBY = 375;
-const flipBXR = flipBX + 135;
-const flipBYR = flipBY + 10;
-const flipWidth = 135;
-const flipHeight = 20;
-const flipInitAng = 45;
+
 
 // Establish canvas context
 
@@ -37,35 +29,45 @@ ctx.closePath();
     //Flippers 
 //Start with rectangles? then move to series of overlapping circles?
 
-//Flipper A 
-let drawInitFlipA = (x, y, width, height,degrees) => {
-  ctx.save();
-  ctx.beginPath();
-  ctx.translate(flipAX, flipAY);
-  ctx.rotate(degrees * (Math.PI/180));
-  ctx.rect(x-flipAX, y-flipAY, width, height);
-  ctx.fillStyle = 'red';
-  ctx.fill();
-  ctx.closePath();
-  ctx.translate(0, 0);
-  ctx.restore();
-}
-drawInitFlipA (flipAX, flipAY, flipWidth, flipHeight, flipInitAng);
+//Refactoring into drawFlipper with render
+const flipAX = 125;
+const flipAY = 375;
+const flipAXR = flipAX;
+const flipAYR = flipAY +10;
+const flipBX = 245;
+const flipBY = 375;
+const flipBXR = flipBX + 135;
+const flipBYR = flipBY + 10;
+const flipWidth = 135;
+const flipHeight = 20;
+let flipInitAng = 45;
+const flipColor = 'red';
+function drawFlipper(x, y, width, height, degrees, color, flipRX, flipRY){
+  this.x = x
+  this.y = y
+  this.width = width
+  this.height = height
+  this.degrees = degrees
+  this.color = color
+  this.flipRX = flipRX
+  this.flipRY = flipRY
+  this.render = function() {
+    ctx.save();
+    ctx.beginPath();
+    ctx.translate(this.flipRX, this.flipRY);
+    ctx.rotate(this.degrees * (Math.PI/180));
+    ctx.rect(this.x-this.flipRX, this.y-this.flipRY, this.width, this.height);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+    ctx.translate(0, 0);
+    ctx.restore();
+  }
+} 
+let flipperA = new drawFlipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAng, flipColor, flipAXR, flipAYR);
 
-//Flipper B
-let drawInitFlipB = (x, y, width, height,degrees) => {
-  ctx.save();
-  ctx.beginPath();
-  ctx.translate(flipBXR, flipBYR);
-  ctx.rotate(degrees * (Math.PI/180));
-  ctx.rect(x-flipBXR, y-flipBYR, width, height);
-  ctx.fillStyle = 'red';
-  ctx.fill();
-  ctx.closePath();
-  ctx.translate(0, 0);
-  ctx.restore();
-}
-drawInitFlipB (flipBX, flipBY, flipWidth, flipHeight, -flipInitAng);
+let flipperB = new drawFlipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
+
 
    //Pinball
 let ballX = 540;
@@ -132,6 +134,13 @@ function movementFiringPinRelease(e) {
     firePin.y = movementFPpow;
   } 
 }
+//flippers 
+  //z = keyCode === 90
+  // ? = keyCode === 191
+function movementFlipperUp(e){
+  console.log(e.keyCode);
+}
+//canvas loop and redraw
 setInterval(function(){
   ctx.clearRect(0, 0, game.width, game.height);
   //Initial lane
@@ -144,15 +153,18 @@ setInterval(function(){
   //pinball
   drawPinball (ballX, ballY, radius, ballColor);
   //left flipper
-  drawInitFlipA (flipAX, flipAY, flipWidth, flipHeight, flipInitAng);
+  flipperA.render();
   //right flipper
-  drawInitFlipB (flipBX, flipBY, flipWidth, flipHeight, -flipInitAng);
-
+  flipperB.render();
+//firing pin
   firePin.render();
 }, 1000/60);
 
 document.addEventListener('keydown', movementFiringPinBack);
 document.addEventListener('keyup', movementFiringPinRelease);
+document.addEventListener('keydown', movementFlipperUp);
+// document.addEventListener('keyup', movementFlipperDowm);
+
 
 // Establish collision detection 
   // pinball and flippers
@@ -196,12 +208,12 @@ document.addEventListener('keyup', movementFiringPinRelease);
 
  funcition i used to get it: 
 */ 
-function viewport(){
-var e = window, a = 'inner';
-if (!('innerWidth' in window)){
-a = 'client';
-e = document.documentElement || document.body;
-} 
-return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
-}
-console.log(viewport());
+// function viewport(){
+// var e = window, a = 'inner';
+// if (!('innerWidth' in window)){
+// a = 'client';
+// e = document.documentElement || document.body;
+// } 
+// return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
+// }
+// console.log(viewport());
