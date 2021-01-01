@@ -77,19 +77,27 @@ const startAngle = 0;
 const endAngle = 2 * Math.PI;
 const cClock = false;
 const ballColor = '#a39d9b';
-
-let drawPinball = (x,y,r,color) =>{
-ctx.beginPath();
-ctx.arc(x, y, r, startAngle, endAngle, cClock);
-ctx.lineWidth = 2;
-ctx.strokeStyle = "black";
-ctx.fillStyle = '#a39d9b';
-ctx.stroke();
-ctx.fill();
-ctx.closePath();
+class pinBall{
+  constructor (x,y,r,color){
+    this.x = x 
+    this.y = y
+    this.r = r 
+    this.color = color
+  }
+  drawPinball = (x,y,r,color) =>{
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, startAngle, endAngle, cClock);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "black";
+    ctx.fillStyle = this.color;
+    ctx.stroke();
+    ctx.fill();
+    ctx.closePath();
+    }
+    
 }
-drawPinball (ballX, ballY, radius, ballColor);
 
+let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
    //Initial lane
 ctx.fillStyle = 'brown';
 ctx.fillRect(500, 175, 15, 435);
@@ -171,7 +179,7 @@ setInterval(function(){
   ctx.fillRect(0, 500, 500, 112);
   ctx.closePath();
   //pinball
-  drawPinball (ballX, ballY, radius, ballColor);
+  pinball1.drawPinball();
   //left flipper
   flipperA.render();
   //right flipper
