@@ -161,8 +161,8 @@ ctx.fillStyle = 'brown';
 ctx.fillRect(500, 175, 15, 435);
 
 //Firing pin 
-let movementFP = 465;
-let movementFPpow = 410;
+let movementFP = 40;
+let movementFPpow = -55;
 let pinX = 520;
 let pinY = 425;
 let pinWidth = 40;
@@ -175,8 +175,8 @@ class firingPin {
     this.width = width
     this.height = height
     this.color = color
-    this.start = new Vector (x, y)
-    this.end = new Vector (x + width, y)
+    this.start = new Vector (this.x, this.y)
+    this.end = new Vector (this.x + width, this.y)
     // //position of centerpoint of top of box
     // this.pos = new Vector(x + width/2, y)
   }
@@ -221,30 +221,31 @@ let movementFlipperDown = (e) => {
 }
 
 //dot product between line of firing pin and pinball
-function closestPointPbFp (pinball1, firePin1){
-  let pbToFpStart = firePin1.start.subtr(pinball1.pos);
-  if (Vector.dot(firePin1.firepinUnit(), pbToFpStart)>0){
-    return firePin1.start;
-  }
+// function closestPointPbFp (p1, f1){
+//   let pbToFpStart = firePin1.start.subtr(pinball1.pos);
+//   if (Vector.dot(firePin1.firepinUnit(), pbToFpStart)>0){
+//     return firePin1.start;
+//   }
 
-  let pbToFpEnd = pinball1.pos.subtr(firePin1.end);
-  if(Vector.dot(firePin1.firepinUnit(), pbToFpEnd)>0){
-    return firePin1.end;
-  }
+//   let pbToFpEnd = pinball1.pos.subtr(firePin1.end);
+//   if(Vector.dot(firePin1.firepinUnit(), pbToFpEnd)>0){
+//     return firePin1.end;
+//   }
 
-  let closeDist = Vector.dot(firePin1.firepinUnit(), pbToFpStart);
-  let closeVect = firePin1.firepinUnit().mult(closeDist);
-  return firePin1.start.subtr(closeVect);
-}
+//   let closeDist = Vector.dot(firePin1.firepinUnit(), pbToFpStart);
+//   let closeVect = firePin1.firepinUnit().mult(closeDist);
+//   return firePin1.start.subtr(closeVect);
+// }
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
 //Collision detection fucntion between the pinball and firing pin
-function collision_det_pbFp(pinball1, firePin1){
-  let pbToClosest = closestPointPbFp(pinball1, firePin1).subtr(pinball1.pos);
-  if (pbToClosest.mag() <= pinball1.r){
-    return true;
-  }
-}
+// function collision_det_pbFp(pinball1, firePin1){
+//   let pbToClosestFp = closestPointPbFp(pinball1, firePin1).subtr(pinball1.pos);
+//   if (pbToClosestFp.mag() <= pinball1.r){
+//     return true;
+//   }
+// }
+
 // penetration resolution between pinball and firing pin
 // collision resolution between pinball and firing pin
 
@@ -285,6 +286,15 @@ setInterval(function(){
   // console.log(firePin1.start);
   // console.log(firePin1.end);
 
+  //collision detection for pb and firing pin
+
+  if(collision_det_pbFp(pinball1, firePin1)){
+    ctx.fillText("Collision", 200, 200);
+    console.log('collision');
+  }
+
+  
+
   /* Here I need to add a switch for all the if collision detection of pinball to objects */
   //pinball and firiing pin
   //pinball and walls
@@ -299,14 +309,16 @@ setInterval(function(){
 function movementFiringPinBack(e) {
   if (e.keyCode === 70) {
     // console.log(e.key, e.keyCode);
-    firePin1.y = movementFP;
+    firePin1.y += movementFP;
     // console.log(firePin1.start, firePin1.end);
   } 
 }
 function movementFiringPinRelease(e) {
   if (e.keyCode === 70) {
     console.log(`key is up`);
-    firePin1.y = movementFPpow;
+    firePin1.y += movementFPpow;
+    console.log(firePin1.y);
+    console.log(firePin1.start, firePin1.end);
     // console.log(firePin1.start, firePin1.end);
   } 
 }
