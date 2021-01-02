@@ -15,7 +15,11 @@ let leftFlipUp = false;
 let rightFlipUp = false;
 let firePinDown = false;
 let allowed = true;
-
+// document.addEventListener('keydown', movementFiringPinBack);
+// document.addEventListener('keyup', movementFiringPinRelease);
+// document.addEventListener('keydown', movementFlipper);
+// document.addEventListener('keyup', movementFlipperDown);
+document.addEventListener('keydown', movementPinball);
 let fired = false;    // code block to exclude 'fired' from global scope
 document.addEventListener('keydown', (e) => {
   // only accept key down when was released
@@ -23,6 +27,7 @@ document.addEventListener('keydown', (e) => {
       fired = true;
       // check what key pressed...
       movementFlipper(e);
+      movementFiringPinBack(e);
       
       }
   });
@@ -30,6 +35,7 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
   fired = false;
   movementFlipperDown(e);
+  movementFiringPinRelease(e);
 });
 
 //Establish Game Canvas object
@@ -385,13 +391,16 @@ function movementFiringPinBack(e) {
     // console.log(firePin1.start, firePin1.end);
   } 
 }
+let resetFiringPin = () => {
+  firePin1.y = pinY;
+}
 function movementFiringPinRelease(e) {
   if (e.keyCode === 70 && !firePinDown) {
     console.log(`key is up`);
     firePin1.y += movementFPpow;
     console.log(firePin1.y);
     console.log(firePin1.start, firePin1.end);
-    // console.log(firePin1.start, firePin1.end);
+    setTimeout(resetFiringPin, 1000);
   } 
 }
 
@@ -401,11 +410,7 @@ function movementPinball(e) {
   }
 }
 
-document.addEventListener('keydown', movementFiringPinBack);
-document.addEventListener('keyup', movementFiringPinRelease);
-// document.addEventListener('keydown', movementFlipper);
-// document.addEventListener('keyup', movementFlipperDown);
-document.addEventListener('keydown', movementPinball);
+
 
 
 // Establish collision detection 
@@ -439,23 +444,3 @@ document.addEventListener('keydown', movementPinball);
 // add visual elements
 
 // second level
-
-//Determine Browser size - 
-/*
- window fullscreen - width: 1920, height: 969
- window fullscreen dev tools mobile - width: 400, height: 807  
-
- Should I determine objects in window fullscreen to be mathmaetically convertble to fullscreen mobile? 
-        MAYBE?????? 
-
- funcition i used to get it: 
-*/ 
-// function viewport(){
-// var e = window, a = 'inner';
-// if (!('innerWidth' in window)){
-// a = 'client';
-// e = document.documentElement || document.body;
-// } 
-// return { width : e[ a+'Width' ] , height : e[ a+'Height' ] }
-// }
-// console.log(viewport());
