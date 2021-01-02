@@ -175,6 +175,8 @@ class firingPin {
     this.width = width
     this.height = height
     this.color = color
+    this.start = new Vector (x, y)
+    this.end = new Vector (x + width, y)
     // //position of centerpoint of top of box
     // this.pos = new Vector(x + width/2, y)
   }
@@ -183,25 +185,16 @@ class firingPin {
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
+
+  firepinUnit(){
+    return this.end.subtr(this.start).unit();
+  }
+  
 }
 let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
 
 
-// Map firing pin and flippers to key presses  
-      // determine if timeout's are needed 
-//firing pin
-function movementFiringPinBack(e) {
-  if (e.keyCode === 70) {
-    console.log(e.key, e.keyCode);
-    firePin1.y = movementFP;
-  } 
-}
-function movementFiringPinRelease(e) {
-  if (e.keyCode === 70) {
-    console.log(`key is up`);
-    firePin1.y = movementFPpow;
-  } 
-}
+
 //flippers 
   //z = keyCode === 90
   // / = keyCode === 191
@@ -226,9 +219,51 @@ let movementFlipperDown = (e) => {
       break
   }
 }
+
+//dot product between line of firing pin and pinball
+function closestPointPbFp (pinball1, firePin1){
+  let pbToFpStart = firePin1.start.subtr(pinball1.pos);
+  if (Vector.dot(firePin1.firepinUnit(), pbToFpStart)>0){
+    return firePin1.start;
+  }
+
+  let pbToFpEnd = pinball1.pos.subtr(firePin1.end);
+  if(Vector.dot(firePin1.firepinUnit(), pbToFpEnd)>0){
+    return firePin1.end;
+  }
+
+  let closeDist = Vector.dot(firePin1.firepinUnit(), pbToFpStart);
+  let closeVect = firePin1.firepinUnit().mult(closeDist);
+  return firePin1.start.subtr(closeVect);
+}
+
+/* Collision detection, Penetration Resolution, collision resolution / response */
+//Collision detection fucntion between the pinball and firing pin
+function collision_det_pbFp(pinball1, firePin1){
+  let pbToClosest = closestPointPbFp(pinball1, firePin1).subtr(pinball1.pos);
+  if (pbToClosest.mag() <= pinball1.r){
+    return true;
+  }
+}
+// penetration resolution between pinball and firing pin
+// collision resolution between pinball and firing pin
+
+//collision detect pinball and walls
+//pen resolution between pinball and walls 
+//collision resolution between pinball and walls
+
+//collision detection pinball and flippers
+//pen resolution between pinball and flippers
+//collision resolution betweeen pinball and flippers
+
+//collision detection pinball and dead space
+//pen resolution between pinball and dead space
+//collision resolution between pinball and dead space 
+//function end game loop
+
 //##### working but must figure out how to stop it from fully rotating when key is held down
 
-//canvas loop and redraw
+// main game loop canvas loop and redraw
 setInterval(function(){
   ctx.clearRect(0, 0, game.width, game.height);
   //Initial lane
@@ -246,7 +281,35 @@ setInterval(function(){
   flipperB.render();
 //firing pin
   firePin1.drawFiringPin();
+  // //console log to check line end start
+  // console.log(firePin1.start);
+  // console.log(firePin1.end);
+
+  /* Here I need to add a switch for all the if collision detection of pinball to objects */
+  //pinball and firiing pin
+  //pinball and walls
+  //pinball and flippers
+  //pinball and deadspace
+    //end game loop
 }, 1000/60);
+
+// Map firing pin and flippers to key presses  
+//       determine if timeout's are needed 
+// firing pin
+function movementFiringPinBack(e) {
+  if (e.keyCode === 70) {
+    // console.log(e.key, e.keyCode);
+    firePin1.y = movementFP;
+    // console.log(firePin1.start, firePin1.end);
+  } 
+}
+function movementFiringPinRelease(e) {
+  if (e.keyCode === 70) {
+    console.log(`key is up`);
+    firePin1.y = movementFPpow;
+    // console.log(firePin1.start, firePin1.end);
+  } 
+}
 
 document.addEventListener('keydown', movementFiringPinBack);
 document.addEventListener('keyup', movementFiringPinRelease);
