@@ -22,6 +22,30 @@ game.setAttribute('width', getComputedStyle(game)['width'])
     Firing Pin
     Dead space 
     */
+
+//Vector Class for collision detection
+
+class Vector {
+  constructor (x,y){
+    this.x = x 
+    this.y = y
+  }
+
+  add(v){
+    return new Vector(this.x+v.x, this.y+v.y);
+  }
+
+  subtr(v){
+    return new Vector(this.x-v.x, this.y-v.y);
+  }
+
+  mag(){
+    return Math.sqrt(this.x**2 + this.y**2);
+  }
+  mult(n){
+    return new Vector (this.x*n, this.y*n);
+  }
+}
 //Dead Space - use a rectangle for now
 ctx.fillStyle = 'darkgreen';
 ctx.fillRect(0, 500, 500, 112);
@@ -83,6 +107,9 @@ class pinBall{
     this.y = y
     this.r = r 
     this.color = color
+    this.vel = new Vector(0,0);
+    this.acc = new Vector(0,0);
+    
   }
   drawPinball = (x,y,r,color) =>{
     ctx.beginPath();
