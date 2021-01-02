@@ -60,17 +60,12 @@ let fired = false;
 let flipPressMovement = 95;    
 //STOP REPEAT
 document.addEventListener('keydown', (e) => {
-  // only accept key down when was released
-  // if(!fired) {
-  //     fired = true;
-  //     // check what key pressed...
   
-  //     }
   keyPresses[e.code] = true;
   console.log(keyPresses);
-  movementFiringPinBack(e);
-  movementFlipper(e);
-  movementPinball(e);
+  movementFiringPinBack();
+  movementFlipper();
+  // movementPinball();
   
   });
 
@@ -78,11 +73,11 @@ document.addEventListener('keyup', (e) => {
   // fired = false;
   keyPresses[e.code] = false;
   console.log(keyPresses);
-  movementFlipperDown(e);
-  movementFiringPinRelease(e);
+  movementFlipperDown();
+  movementFiringPinRelease();
 });
 
-function movementFiringPinBack(e) {
+function movementFiringPinBack() {
   if (keyPresses.KeyF === true) {
     console.log('anything');
     firePin1.y += movementFP;
@@ -92,28 +87,31 @@ function movementFiringPinBack(e) {
 let resetFiringPin = () => {
   firePin1.y = pinY;
 }
-function movementFiringPinRelease(e) {
-  // if (e.keyCode === 70) {
-  //   console.log(`key is up`);
-  //   firePin1.y += movementFPpow;
-  //   console.log(firePin1.y);
-  //   console.log(firePin1.start, firePin1.end);
-  //   setTimeout(resetFiringPin, 1000);
-  // } 
+function movementFiringPinRelease() {
+  if (keyPresses.KeyF === false) {
+    console.log(`key is up`);
+    firePin1.y += movementFPpow;
+    console.log(firePin1.y);
+    console.log(firePin1.start, firePin1.end);
+    setTimeout(resetFiringPin, 1000);
+  } 
 }
-let movementFlipper = (e) => {
-  switch (e.keyCode){
-    case 90: flipperA.degrees -= flipPressMovement
-    break
-    case 191: flipperB.degrees += flipPressMovement
-    break
+let movementFlipper = () => {
+  if(keyPresses.KeyZ === true && flipperA.degrees > -50){
+    flipperA.degrees -= flipPressMovement
+    console.log(flipperA.degrees);
+    }
+  if(keyPresses.Slash === true && flipperB.degrees < 50){
+    flipperB.degrees += flipPressMovement
+    console.log(flipperB.degrees);
+    }
   }
-}
-let movementFlipperDown = (e) => {
-  if(e.keyCode === 90 ){
+
+let movementFlipperDown = () => {
+  if(keyPresses.KeyZ === false){
     flipperA.degrees = flipInitAng
   }
-  if(e.keyCode === 191){
+  if(keyPresses.Slash === false){
     flipperB.degrees = -flipInitAng
   }
 }
@@ -338,12 +336,12 @@ setInterval(function(){
   firePin1.drawFiringPin();
   // //console log to check line end start
 // pinballFirepinColliding(pinball1, firePin1);
-// console.log();
-  // collision detection for pb and firing pin
-  // if(pinballFirepinColliding(pinball1, firePin1)){
-  //   ctx.fillText("Collision", 200, 200);
-  //   console.log('collision');
-  // }
+// // console.log();
+// //   collision detection for pb and firing pin
+//   if(pinballFirepinColliding(pinball1, firePin1)){
+//     ctx.fillText("Collision", 200, 200);
+//     console.log('collision'); 
+
 }, 1000/60);
   
 
