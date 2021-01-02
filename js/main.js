@@ -11,7 +11,26 @@ let ctx = game.getContext('2d')
 game.setAttribute('height', getComputedStyle(game)['height'])
 game.setAttribute('width', getComputedStyle(game)['width'])
 
+let leftFlipUp = false;
+let rightFlipUp = false;
+let firePinDown = false;
+let allowed = true;
 
+let fired = false;    // code block to exclude 'fired' from global scope
+document.addEventListener('keydown', (e) => {
+  // only accept key down when was released
+  if(!fired) {
+      fired = true;
+      // check what key pressed...
+      movementFlipper(e);
+      
+      }
+  });
+
+document.addEventListener('keyup', (e) => {
+  fired = false;
+  movementFlipperDown(e);
+});
 
 //Establish Game Canvas object
 /* Game objects:
@@ -109,6 +128,7 @@ function drawFlipper(x, y, width, height, degrees, color, flipRX, flipRY){
     ctx.fillStyle = this.color;
     ctx.fill();
     ctx.closePath();
+    //this could live somewhere else? 
     ctx.translate(0, 0);
     ctx.restore();
   }
@@ -128,6 +148,8 @@ const cClock = false;
 const ballColor = '#a39d9b';
 class pinBall{
   constructor (x,y,r,color){
+    this.x = x
+    this.y = y
     this.pos = new Vector(x,y);
     this.r = r 
     this.color = color
@@ -138,7 +160,7 @@ class pinBall{
   //draw the pinball
   drawPinball = (x,y,r,color) =>{
     ctx.beginPath();
-    ctx.arc(this.pos.x, this.pos.y, this.r, startAngle, endAngle, cClock);
+    ctx.arc(this.x, this.y, this.r, startAngle, endAngle, cClock);
     ctx.lineWidth = 2;
     ctx.strokeStyle = "black";
     ctx.fillStyle = this.color;
@@ -177,6 +199,7 @@ class firingPin {
     this.color = color
     this.start = new Vector (this.x, this.y)
     this.end = new Vector (this.x + width, this.y)
+    this.center = new Vector (this.x+this.width/2, this.y+this.height/2)
     // //position of centerpoint of top of box
     // this.pos = new Vector(x + width/2, y)
   }
@@ -200,24 +223,46 @@ let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
   // / = keyCode === 191
 let flipPressMovement = 95;
 let movementFlipper = (e) => {
-  switch (e.keyCode) {
-    case 90:
-      flipperA.degrees -= flipPressMovement
-      break
-    case 191:
-      flipperB.degrees += flipPressMovement
-      break
-  }    
+  // switch (e.keyCode) {
+  //   case 90:
+  //     if (!leftFlipUp){
+  //       flipperA.degrees -= flipPressMovement
+  //     }
+  //     break
+  //   case 191:
+  //     if (!rightFlipUp){
+  //     flipperB.degrees += flipPressMovement
+  //     }
+  //     break
+  // }    
+  if(e.keyCode === 90 && !leftFlipUp){
+    flipperA.degrees -= flipPressMovement
+  } 
+
+  if(e.keyCode === 191 && !rightFlipUp){
+    flipperB.degrees += flipPressMovement
+  }
+
 }
 let movementFlipperDown = (e) => {
-  switch (e.keyCode) {
-    case 90:
-      flipperA.degrees = flipInitAng
-      break
-    case 191:
-      flipperB.degrees = -flipInitAng
-      break
+  if(e.keyCode === 90){
+    flipperA.degrees = flipInitAng
   }
+  if(e.keyCode === 19){
+    flipperB.degrees = -flipInitAng
+  }
+//   switch (e.keyCode) {
+//     case 90:
+//       if (leftFlipUp){
+//         flipperA.degrees = flipInitAng
+//       }
+//       break
+//       case 191:
+//         if (rightFlipUp){
+//         flipperB.degrees = -flipInitAng
+//         }
+//       break
+//   }
 }
 
 //dot product between line of firing pin and pinball
@@ -239,6 +284,32 @@ let movementFlipperDown = (e) => {
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
 //Collision detection fucntion between the pinball and firing pin
+function pinballFirepinColliding (pinball1, firePin1) {
+    
+  //return true if they are colliding
+  let distX = Math.abs(pinball1.x - (firePin1.center.x));
+  let distY = Math.abs(pinball1.y - (firePin1.center.y));
+
+  if (distX > (firePin1.width/2 + pinball1.radius)){
+    return false;
+  }
+  if (distY > (firePin1.height/2 + pinball1.radius)){
+    return false;
+  }
+  
+  if (distX <= (firePin1.width/2)){
+    return true;
+  }
+  if (distY <= (firePin1.width/2)){
+    return true;
+  }
+
+  let dx= distX-firePin1.width/2;
+  let dy= distY-firePin1.height/2;
+  return((dx**2+dy**2)<(pinball1.r**2));
+
+}
+
 // function collision_det_pbFp(pinball1, firePin1){
 //   let pbToClosestFp = closestPointPbFp(pinball1, firePin1).subtr(pinball1.pos);
 //   if (pbToClosestFp.mag() <= pinball1.r){
@@ -276,6 +347,7 @@ setInterval(function(){
   ctx.closePath();
   //pinball
   pinball1.drawPinball();
+  // console.log(pinball1.y);
   //left flipper
   flipperA.render();
   //right flipper
@@ -283,15 +355,16 @@ setInterval(function(){
 //firing pin
   firePin1.drawFiringPin();
   // //console log to check line end start
-  // console.log(firePin1.start);
-  // console.log(firePin1.end);
-
-  //collision detection for pb and firing pin
-
-  if(collision_det_pbFp(pinball1, firePin1)){
-    ctx.fillText("Collision", 200, 200);
-    console.log('collision');
-  }
+// pinballFirepinColliding(pinball1, firePin1);
+// console.log();
+  // collision detection for pb and firing pin
+  // if(pinballFirepinColliding(pinball1, firePin1)){
+  //   ctx.fillText("Collision", 200, 200);
+  //   console.log('collision');
+  // }
+}, 1000/60);
+  
+  
 
   
 
@@ -301,20 +374,19 @@ setInterval(function(){
   //pinball and flippers
   //pinball and deadspace
     //end game loop
-}, 1000/60);
 
 // Map firing pin and flippers to key presses  
 //       determine if timeout's are needed 
 // firing pin
 function movementFiringPinBack(e) {
-  if (e.keyCode === 70) {
+  if (e.keyCode === 70 && !firePinDown) {
     // console.log(e.key, e.keyCode);
     firePin1.y += movementFP;
     // console.log(firePin1.start, firePin1.end);
   } 
 }
 function movementFiringPinRelease(e) {
-  if (e.keyCode === 70) {
+  if (e.keyCode === 70 && !firePinDown) {
     console.log(`key is up`);
     firePin1.y += movementFPpow;
     console.log(firePin1.y);
@@ -323,10 +395,17 @@ function movementFiringPinRelease(e) {
   } 
 }
 
+function movementPinball(e) {
+  if (e.key === 'w') {
+    pinball1.y += 10;
+  }
+}
+
 document.addEventListener('keydown', movementFiringPinBack);
 document.addEventListener('keyup', movementFiringPinRelease);
-document.addEventListener('keydown', movementFlipper);
-document.addEventListener('keyup', movementFlipperDown);
+// document.addEventListener('keydown', movementFlipper);
+// document.addEventListener('keyup', movementFlipperDown);
+document.addEventListener('keydown', movementPinball);
 
 
 // Establish collision detection 
