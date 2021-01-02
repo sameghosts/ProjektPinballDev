@@ -394,7 +394,7 @@ function movementFiringPinRelease(e) {
     // console.log(firePin1.start, firePin1.end);
   } 
 }
-
+//test for git branch
 function movementPinball(e) {
   if (e.key === 'w') {
     pinball1.y += 10;
