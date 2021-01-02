@@ -42,8 +42,33 @@ class Vector {
   mag(){
     return Math.sqrt(this.x**2 + this.y**2);
   }
+  
   mult(n){
     return new Vector (this.x*n, this.y*n);
+  }
+
+  unit(){
+    if(this.mag() === 0){
+      return new Vector (0,0);
+    } else {
+    return new Vector (this.x/this.mag(), this.y/this.mag());
+    }
+  }
+
+  normal(){
+    return new Vector(-this.y, this.x).unit();
+  }
+
+  static dot(v1, v2){
+    return v1.x*v2.x + v1.y*v2.y; 
+  }
+
+  drawVec(start_x, start_y, n, color){
+    ctx.beginPath();
+    ctx.moveTo(start_x, start_y);
+    ctx.lineTo(start_x + this.x * n, y + this.y * n);
+    ctx.strokeStyle = this.color;
+    ctx.stroke();
   }
 }
 //Dead Space - use a rectangle for now
@@ -103,17 +128,17 @@ const cClock = false;
 const ballColor = '#a39d9b';
 class pinBall{
   constructor (x,y,r,color){
-    this.x = x 
-    this.y = y
+    this.pos = new Vector(x,y);
     this.r = r 
     this.color = color
     this.vel = new Vector(0,0);
     this.acc = new Vector(0,0);
     
   }
+  //draw the pinball
   drawPinball = (x,y,r,color) =>{
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, startAngle, endAngle, cClock);
+    ctx.arc(this.pos.x, this.pos.y, this.r, startAngle, endAngle, cClock);
     ctx.lineWidth = 2;
     ctx.strokeStyle = "black";
     ctx.fillStyle = this.color;
@@ -121,11 +146,17 @@ class pinBall{
     ctx.fill();
     ctx.closePath();
     }
+  //display the acceleration and velocity vectors of the ball
+  display() {
+    this.vel.drawVec(this.x, this.y, 10, 'green');
+    this.acc.drawVec(this.x, this.y, 100, 'red');
+  }
     
 }
 
 let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
-   //Initial lane
+
+//Initial lane
 ctx.fillStyle = 'brown';
 ctx.fillRect(500, 175, 15, 435);
 
@@ -137,18 +168,38 @@ let pinY = 425;
 let pinWidth = 40;
 let pinHeight = 125;
 let pinColor = 'orange';
-function drawFiringPin(x, y, width, height, color){
-  this.x = x
-  this.y = y
-  this.width = width
-  this.height = height
-  this.color = color
-  this.render = function() {  
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-  }  
+class firingPin {
+  constructor(x, y, width, height, color) {
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height
+    this.color = color
+    // //position of centerpoint of top of box
+    // this.pos = new Vector(x + width/2, y)
+  }
+  drawFiringPin = (x, y, width, height, color) =>{
+    
+    ctx.fillStyle = this.color
+    ctx.fillRect(this.x, this.y, this.width, this.height)
+  }
 }
-let firePin = new drawFiringPin(pinX, pinY, pinWidth, pinHeight, pinColor);
+let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
+// function drawFiringPin(x, y, width, height, color){
+//   this.x = x
+//   this.y = y
+//   this.width = width
+//   this.height = height
+//   this.color = color
+//   //position of centerpoint of top of box
+//   this.pos = new Vector(x + width/2, y)
+
+//   this.render = function() {  
+//     ctx.fillStyle = this.color;
+//     ctx.fillRect(this.x, this.y, this.width, this.height);
+//   }  
+// }
+// let firePin = new drawFiringPin(pinX, pinY, pinWidth, pinHeight, pinColor);
 
 // firePin.render();
 
@@ -160,13 +211,13 @@ let firePin = new drawFiringPin(pinX, pinY, pinWidth, pinHeight, pinColor);
 function movementFiringPinBack(e) {
   if (e.keyCode === 70) {
     console.log(e.key, e.keyCode);
-    firePin.y = movementFP;
+    firePin1.y = movementFP;
   } 
 }
 function movementFiringPinRelease(e) {
   if (e.keyCode === 70) {
     console.log(`key is up`);
-    firePin.y = movementFPpow;
+    firePin1.y = movementFPpow;
   } 
 }
 //flippers 
@@ -212,7 +263,7 @@ setInterval(function(){
   //right flipper
   flipperB.render();
 //firing pin
-  firePin.render();
+  firePin1.drawFiringPin();
 }, 1000/60);
 
 document.addEventListener('keydown', movementFiringPinBack);
