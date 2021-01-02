@@ -185,24 +185,6 @@ class firingPin {
   }
 }
 let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
-// function drawFiringPin(x, y, width, height, color){
-//   this.x = x
-//   this.y = y
-//   this.width = width
-//   this.height = height
-//   this.color = color
-//   //position of centerpoint of top of box
-//   this.pos = new Vector(x + width/2, y)
-
-//   this.render = function() {  
-//     ctx.fillStyle = this.color;
-//     ctx.fillRect(this.x, this.y, this.width, this.height);
-//   }  
-// }
-// let firePin = new drawFiringPin(pinX, pinY, pinWidth, pinHeight, pinColor);
-
-// firePin.render();
-
 
 
 // Map firing pin and flippers to key presses  
