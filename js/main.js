@@ -3,6 +3,9 @@
 let game = document.getElementById('game')
 let leftScreen = document.getElementById('leftScreen')
 let rightScreen = document.getElementById('rightScreen')
+let keyPresses = {
+
+}
 
 
 // Establish canvas context
@@ -11,45 +14,118 @@ let ctx = game.getContext('2d')
 game.setAttribute('height', getComputedStyle(game)['height'])
 game.setAttribute('width', getComputedStyle(game)['width'])
 
-let leftFlipUp = false;
-let rightFlipUp = false;
-let firePinDown = false;
-let allowed = true;
+/* Variables */
+//Firing Pin Variables
+let movementFP = 40;
+let movementFPpow = -55;
+let pinX = 520;
+let pinY = 425;
+let pinWidth = 40;
+let pinHeight = 125;
+let pinColor = 'orange';
+
+//Flipper variables
+const flipAX = 125;
+const flipAY = 375;
+const flipAXR = flipAX;
+const flipAYR = flipAY +10;
+const flipBX = 245;
+const flipBY = 375;
+const flipBXR = flipBX + 135;
+const flipBYR = flipBY + 10;
+const flipWidth = 135;
+const flipHeight = 20;
+let flipInitAng = 45;
+const flipColor = 'red';
+
+//Pinball variables
+let ballX = 540;
+let ballY = 400;
+const radius = 15;
+const startAngle = 0;
+const endAngle = 2 * Math.PI;
+const cClock = false;
+const ballColor = '#a39d9b';
+
+/* MOVEMENT HANDLERS */
 // document.addEventListener('keydown', movementFiringPinBack);
 // document.addEventListener('keyup', movementFiringPinRelease);
 // document.addEventListener('keydown', movementFlipper);
 // document.addEventListener('keyup', movementFlipperDown);
-document.addEventListener('keydown', movementPinball);
-let fired = false;    // code block to exclude 'fired' from global scope
+// document.addEventListener('keydown', movementPinball);
+
+//KEY PRESS MOVEMENT HANDLERS 
+
+let fired = false;
+let flipPressMovement = 95;    
+//STOP REPEAT
 document.addEventListener('keydown', (e) => {
   // only accept key down when was released
-  if(!fired) {
-      fired = true;
-      // check what key pressed...
-      movementFlipper(e);
-      movementFiringPinBack(e);
-      
-      }
+  // if(!fired) {
+  //     fired = true;
+  //     // check what key pressed...
+  
+  //     }
+  keyPresses[e.code] = true;
+  console.log(keyPresses);
+  movementFiringPinBack(e);
+  movementFlipper(e);
+  movementPinball(e);
+  
   });
 
 document.addEventListener('keyup', (e) => {
-  fired = false;
+  // fired = false;
+  keyPresses[e.code] = false;
+  console.log(keyPresses);
   movementFlipperDown(e);
   movementFiringPinRelease(e);
 });
 
-//Establish Game Canvas object
-/* Game objects:
+function movementFiringPinBack(e) {
+  if (keyPresses.KeyF === true) {
+    console.log('anything');
+    firePin1.y += movementFP;
+    // console.log(firePin1.start, firePin1.end);
+  } 
+}
+let resetFiringPin = () => {
+  firePin1.y = pinY;
+}
+function movementFiringPinRelease(e) {
+  // if (e.keyCode === 70) {
+  //   console.log(`key is up`);
+  //   firePin1.y += movementFPpow;
+  //   console.log(firePin1.y);
+  //   console.log(firePin1.start, firePin1.end);
+  //   setTimeout(resetFiringPin, 1000);
+  // } 
+}
+let movementFlipper = (e) => {
+  switch (e.keyCode){
+    case 90: flipperA.degrees -= flipPressMovement
+    break
+    case 191: flipperB.degrees += flipPressMovement
+    break
+  }
+}
+let movementFlipperDown = (e) => {
+  if(e.keyCode === 90 ){
+    flipperA.degrees = flipInitAng
+  }
+  if(e.keyCode === 191){
+    flipperB.degrees = -flipInitAng
+  }
+}
 
-    Pinball
-    Flippers
-    Initial / Starting Lane
-    Firing Pin
-    Dead space 
-    */
+function movementPinball(e) {
+  if (e.key === 'w') {
+    pinball1.y += 10;
+  }
+}
 
+/* Classes and constructors */
 //Vector Class for collision detection
-
 class Vector {
   constructor (x,y){
     this.x = x 
@@ -100,22 +176,39 @@ class Vector {
 ctx.fillStyle = 'darkgreen';
 ctx.fillRect(0, 500, 500, 112);
 ctx.closePath();
-    //Flippers 
-//Start with rectangles? then move to series of overlapping circles?
 
-//Refactoring into drawFlipper with render
-const flipAX = 125;
-const flipAY = 375;
-const flipAXR = flipAX;
-const flipAYR = flipAY +10;
-const flipBX = 245;
-const flipBY = 375;
-const flipBXR = flipBX + 135;
-const flipBYR = flipBY + 10;
-const flipWidth = 135;
-const flipHeight = 20;
-let flipInitAng = 45;
-const flipColor = 'red';
+//Initial lane
+ctx.fillStyle = 'brown';
+ctx.fillRect(500, 175, 15, 435);
+
+//Firing pin 
+class firingPin {
+  constructor(x, y, width, height, color) {
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height
+    this.color = color
+    this.start = new Vector (this.x, this.y)
+    this.end = new Vector (this.x + width, this.y)
+    this.center = new Vector (this.x+this.width/2, this.y+this.height/2)
+    // //position of centerpoint of top of box
+    // this.pos = new Vector(x + width/2, y)
+  }
+  drawFiringPin = (x, y, width, height, color) =>{
+    ctx.fillStyle = this.color
+    ctx.fillRect(this.x, this.y, this.width, this.height)
+  }
+  firepinUnit(){
+    return this.end.subtr(this.start).unit();
+  }  
+}
+let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
+
+//Flippers
+//z = keyCode === 90
+  // / = keyCode === 191
+//Start with rectangles? then move to series of overlapping circles?
 function drawFlipper(x, y, width, height, degrees, color, flipRX, flipRY){
   this.x = x
   this.y = y
@@ -143,15 +236,7 @@ let flipperA = new drawFlipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAn
 
 let flipperB = new drawFlipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
 
-
-   //Pinball
-let ballX = 540;
-let ballY = 400;
-const radius = 15;
-const startAngle = 0;
-const endAngle = 2 * Math.PI;
-const cClock = false;
-const ballColor = '#a39d9b';
+//Pinball
 class pinBall{
   constructor (x,y,r,color){
     this.x = x
@@ -184,109 +269,7 @@ class pinBall{
 
 let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
 
-//Initial lane
-ctx.fillStyle = 'brown';
-ctx.fillRect(500, 175, 15, 435);
 
-//Firing pin 
-let movementFP = 40;
-let movementFPpow = -55;
-let pinX = 520;
-let pinY = 425;
-let pinWidth = 40;
-let pinHeight = 125;
-let pinColor = 'orange';
-class firingPin {
-  constructor(x, y, width, height, color) {
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
-    this.color = color
-    this.start = new Vector (this.x, this.y)
-    this.end = new Vector (this.x + width, this.y)
-    this.center = new Vector (this.x+this.width/2, this.y+this.height/2)
-    // //position of centerpoint of top of box
-    // this.pos = new Vector(x + width/2, y)
-  }
-  drawFiringPin = (x, y, width, height, color) =>{
-    
-    ctx.fillStyle = this.color
-    ctx.fillRect(this.x, this.y, this.width, this.height)
-  }
-
-  firepinUnit(){
-    return this.end.subtr(this.start).unit();
-  }
-  
-}
-let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
-
-
-
-//flippers 
-  //z = keyCode === 90
-  // / = keyCode === 191
-let flipPressMovement = 95;
-let movementFlipper = (e) => {
-  // switch (e.keyCode) {
-  //   case 90:
-  //     if (!leftFlipUp){
-  //       flipperA.degrees -= flipPressMovement
-  //     }
-  //     break
-  //   case 191:
-  //     if (!rightFlipUp){
-  //     flipperB.degrees += flipPressMovement
-  //     }
-  //     break
-  // }    
-  if(e.keyCode === 90 && !leftFlipUp){
-    flipperA.degrees -= flipPressMovement
-  } 
-
-  if(e.keyCode === 191 && !rightFlipUp){
-    flipperB.degrees += flipPressMovement
-  }
-
-}
-let movementFlipperDown = (e) => {
-  if(e.keyCode === 90){
-    flipperA.degrees = flipInitAng
-  }
-  if(e.keyCode === 19){
-    flipperB.degrees = -flipInitAng
-  }
-//   switch (e.keyCode) {
-//     case 90:
-//       if (leftFlipUp){
-//         flipperA.degrees = flipInitAng
-//       }
-//       break
-//       case 191:
-//         if (rightFlipUp){
-//         flipperB.degrees = -flipInitAng
-//         }
-//       break
-//   }
-}
-
-//dot product between line of firing pin and pinball
-// function closestPointPbFp (p1, f1){
-//   let pbToFpStart = firePin1.start.subtr(pinball1.pos);
-//   if (Vector.dot(firePin1.firepinUnit(), pbToFpStart)>0){
-//     return firePin1.start;
-//   }
-
-//   let pbToFpEnd = pinball1.pos.subtr(firePin1.end);
-//   if(Vector.dot(firePin1.firepinUnit(), pbToFpEnd)>0){
-//     return firePin1.end;
-//   }
-
-//   let closeDist = Vector.dot(firePin1.firepinUnit(), pbToFpStart);
-//   let closeVect = firePin1.firepinUnit().mult(closeDist);
-//   return firePin1.start.subtr(closeVect);
-// }
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
 //Collision detection fucntion between the pinball and firing pin
@@ -315,14 +298,7 @@ function pinballFirepinColliding (pinball1, firePin1) {
   return((dx**2+dy**2)<(pinball1.r**2));
 
 }
-
-// function collision_det_pbFp(pinball1, firePin1){
-//   let pbToClosestFp = closestPointPbFp(pinball1, firePin1).subtr(pinball1.pos);
-//   if (pbToClosestFp.mag() <= pinball1.r){
-//     return true;
-//   }
-// }
-
+//Collision detection pinball and firing pin
 // penetration resolution between pinball and firing pin
 // collision resolution between pinball and firing pin
 
@@ -370,7 +346,6 @@ setInterval(function(){
   // }
 }, 1000/60);
   
-  
 
   
 
@@ -380,37 +355,6 @@ setInterval(function(){
   //pinball and flippers
   //pinball and deadspace
     //end game loop
-
-// Map firing pin and flippers to key presses  
-//       determine if timeout's are needed 
-// firing pin
-function movementFiringPinBack(e) {
-  if (e.keyCode === 70 && !firePinDown) {
-    // console.log(e.key, e.keyCode);
-    firePin1.y += movementFP;
-    // console.log(firePin1.start, firePin1.end);
-  } 
-}
-let resetFiringPin = () => {
-  firePin1.y = pinY;
-}
-function movementFiringPinRelease(e) {
-  if (e.keyCode === 70 && !firePinDown) {
-    console.log(`key is up`);
-    firePin1.y += movementFPpow;
-    console.log(firePin1.y);
-    console.log(firePin1.start, firePin1.end);
-    setTimeout(resetFiringPin, 1000);
-  } 
-}
-
-function movementPinball(e) {
-  if (e.key === 'w') {
-    pinball1.y += 10;
-  }
-}
-
-
 
 
 // Establish collision detection 
