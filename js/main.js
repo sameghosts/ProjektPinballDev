@@ -63,8 +63,8 @@ document.addEventListener('keydown', (e) => {
   
   keyPresses[e.code] = true;
   console.log(keyPresses);
-  movementFiringPinBack();
   movementFlipper();
+  movementFiringPinBack();
   // movementPinball();
   
   });
@@ -78,9 +78,10 @@ document.addEventListener('keyup', (e) => {
 });
 
 function movementFiringPinBack() {
-  if (keyPresses.KeyF === true) {
-    console.log('anything');
+  if (keyPresses.KeyF === true && firePin1.y < 465) {
+    // console.log('anything');
     firePin1.y += movementFP;
+    console.log(firePin1.y);
     // console.log(firePin1.start, firePin1.end);
   } 
 }
@@ -88,11 +89,11 @@ let resetFiringPin = () => {
   firePin1.y = pinY;
 }
 function movementFiringPinRelease() {
-  if (keyPresses.KeyF === false) {
+  if (keyPresses.KeyF === false && firePin1.y > 410) {
     console.log(`key is up`);
     firePin1.y += movementFPpow;
     console.log(firePin1.y);
-    console.log(firePin1.start, firePin1.end);
+    // console.log(firePin1.start, firePin1.end);
     setTimeout(resetFiringPin, 1000);
   } 
 }
@@ -273,6 +274,8 @@ let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
 //Attempt to store values in objects 
 let pball = {x: pinball1.x, y: pinball1.y, r: pinball1.r};
 let fpin = {x: firePin1.x, y: firePin1.y, w: firePin1.width, h: firePin1.height}
+console.log(pball, fpin);
+console.log(pinball1.x, firePin1.x)
 function pinballFirepinColliding(fpin, pball){
   let distx = Math.abs(pball.x - (fpin.x+fpin.w/2));
   let disty = Math.abs(pball.y - (fpin.y+fpin.h/2));
@@ -287,9 +290,9 @@ function pinballFirepinColliding(fpin, pball){
   let dy=disty-fpin.h/2;
   return (dx**2+dy**2<=(pball.r**2));
 }
-if(pinballFirepinColliding()){
-  console.log('collision');
-}
+// if(pinballFirepinColliding()){
+//   console.log('collision');
+// }
 // console.log(pinballFirepinColliding());
 //Collision detection pinball and firing pin
 // penetration resolution between pinball and firing pin
