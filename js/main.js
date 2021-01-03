@@ -75,24 +75,28 @@ document.addEventListener('keyup', (e) => {
   console.log(keyPresses);
   movementFlipperDown();
   movementFiringPinRelease();
+  console.log(fpin, pinballFirepinColliding());
 });
 
 function movementFiringPinBack() {
   if (keyPresses.KeyF === true && firePin1.y < 465) {
     // console.log('anything');
     firePin1.y += movementFP;
+    fpin.y +=movementFP;
     console.log(firePin1.y);
     // console.log(firePin1.start, firePin1.end);
   } 
 }
 let resetFiringPin = () => {
   firePin1.y = pinY;
+  fpin.y = pinY;
 }
 function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.y > 410) {
     console.log(`key is up`);
     firePin1.y += movementFPpow;
-    console.log(firePin1.y);
+    fpin.y += movementFPpow;
+    console.log(fpin);
     // console.log(firePin1.start, firePin1.end);
     setTimeout(resetFiringPin, 1000);
   } 
@@ -276,7 +280,7 @@ let pball = {x: pinball1.x, y: pinball1.y, r: pinball1.r};
 let fpin = {x: firePin1.x, y: firePin1.y, w: firePin1.width, h: firePin1.height}
 console.log(pball, fpin);
 console.log(pinball1.x, firePin1.x)
-function pinballFirepinColliding(fpin, pball){
+function pinballFirepinColliding(){
   let distx = Math.abs(pball.x - (fpin.x+fpin.w/2));
   let disty = Math.abs(pball.y - (fpin.y+fpin.h/2));
 
@@ -290,9 +294,8 @@ function pinballFirepinColliding(fpin, pball){
   let dy=disty-fpin.h/2;
   return (dx**2+dy**2<=(pball.r**2));
 }
-// if(pinballFirepinColliding()){
-//   console.log('collision');
-// }
+
+  console.log(pinballFirepinColliding());
 // console.log(pinballFirepinColliding());
 //Collision detection pinball and firing pin
 // penetration resolution between pinball and firing pin
@@ -339,10 +342,10 @@ setInterval(function(){
 // pinballFirepinColliding();
 // console.log(pinballFirepinColliding());
 // console.log(pinball1.collisionFP);  
-// if(pinball1.collisionFP){
-  //   ctx.fillText("Collision", 200, 200);
-  //   console.log('collision'); 
-  // }
+if(pinballFirepinColliding()){
+    ctx.fillText("Collision", 200, 200);
+    console.log('collision'); 
+  }
 
 }, 1000/60);
   
