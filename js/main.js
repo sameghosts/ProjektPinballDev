@@ -244,7 +244,6 @@ class pinBall{
     this.color = color
     this.vel = new Vector(0,0);
     this.acc = new Vector(0,0);
-    
   }
   //draw the pinball
   drawPinball = (x,y,r,color) =>{
@@ -258,44 +257,40 @@ class pinBall{
     ctx.closePath();
     }
   //display the acceleration and velocity vectors of the ball
-  display() {
-    this.vel.drawVec(this.x, this.y, 10, 'green');
-    this.acc.drawVec(this.x, this.y, 100, 'red');
-  }
-    
-}
+  // display() {
+  //   this.vel.drawVec(this.x, this.y, 10, 'green');
+  //   this.acc.drawVec(this.x, this.y, 100, 'red');
+  // }
+  
 
+}
 let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
 
 
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
 //Collision detection fucntion between the pinball and firing pin
-function pinballFirepinColliding (pinball1, firePin1) {
-    
-  //return true if they are colliding
-  let distX = Math.abs(pinball1.x - (firePin1.center.x));
-  let distY = Math.abs(pinball1.y - (firePin1.center.y));
+//Attempt to store values in objects 
+let pball = {x: pinball1.x, y: pinball1.y, r: pinball1.r};
+let fpin = {x: firePin1.x, y: firePin1.y, w: firePin1.width, h: firePin1.height}
+function pinballFirepinColliding(fpin, pball){
+  let distx = Math.abs(pball.x - (fpin.x+fpin.w/2));
+  let disty = Math.abs(pball.y - (fpin.y+fpin.h/2));
 
-  if (distX > (firePin1.width/2 + pinball1.radius)){
-    return false;
-  }
-  if (distY > (firePin1.height/2 + pinball1.radius)){
-    return false;
-  }
-  
-  if (distX <= (firePin1.width/2)){
-    return true;
-  }
-  if (distY <= (firePin1.width/2)){
-    return true;
-  }
+  if (distx > (fpin.w/2 + pball.r)) { return false; }
+  if (disty > (fpin.h/2 + pball.r)) { return false; }
 
-  let dx= distX-firePin1.width/2;
-  let dy= distY-firePin1.height/2;
-  return((dx**2+dy**2)<(pinball1.r**2));
+  if (distx <= (fpin.w/2)) { return true; } 
+  if (disty <= (fpin.h/2)) { return true; }
 
+  let dx=distx-fpin.w/2;
+  let dy=disty-fpin.h/2;
+  return (dx**2+dy**2<=(pball.r**2));
 }
+if(pinballFirepinColliding()){
+  console.log('collision');
+}
+// console.log(pinballFirepinColliding());
 //Collision detection pinball and firing pin
 // penetration resolution between pinball and firing pin
 // collision resolution between pinball and firing pin
@@ -316,6 +311,7 @@ function pinballFirepinColliding (pinball1, firePin1) {
 //##### working but must figure out how to stop it from fully rotating when key is held down
 
 // main game loop canvas loop and redraw
+
 setInterval(function(){
   ctx.clearRect(0, 0, game.width, game.height);
   //Initial lane
@@ -334,13 +330,16 @@ setInterval(function(){
   flipperB.render();
 //firing pin
   firePin1.drawFiringPin();
-  // //console log to check line end start
-// pinballFirepinColliding(pinball1, firePin1);
-// // console.log();
-// //   collision detection for pb and firing pin
-//   if(pinballFirepinColliding(pinball1, firePin1)){
-//     ctx.fillText("Collision", 200, 200);
-//     console.log('collision'); 
+  // console.log(pinball1.x, firePin1.y);
+
+  
+// pinballFirepinColliding();
+// console.log(pinballFirepinColliding());
+// console.log(pinball1.collisionFP);  
+// if(pinball1.collisionFP){
+  //   ctx.fillText("Collision", 200, 200);
+  //   console.log('collision'); 
+  // }
 
 }, 1000/60);
   
