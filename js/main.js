@@ -267,6 +267,10 @@ class pinBall{
     this.color = color
     this.vel = new Vector(0,0);
     this.acc = new Vector (0,0);
+    this.speed = new Vector (0,0);
+    this.gravity = 0.05;
+    this.gravitySpeed = 0;
+
     this.acceleration = 1;
     this.edge = this.pos.x + this.r;
   }
@@ -281,14 +285,28 @@ class pinBall{
     ctx.fill();
     ctx.closePath();
     }
-  reposition(){
-      // this.acc = this.acc.add(gravity);
+  reposition = () =>{
+      this.acc = this.acc.add(gravity);
       // this.acc = this.acc.unit()
       this.acc = this.acc.mult(this.acceleration);
       this.vel = this.vel.add(this.acc);
       this.vel = this.vel.mult(1-friction);
       this.pos = this.pos.add(this.vel);
     }
+  hitsBottom = () =>{
+    const bottomEdge = game.height - this.r;
+    if (this.pos.y > bottomEdge){
+      this.pos.y = bottomEdge;
+    }
+  }
+  
+  
+  newPos = () => {
+    this.gravitySpeed += this.gravity;
+    this.pos.x += this.speed.x;
+    this.pos.y += this.speed.y +this.gravitySpeed;
+    this.hitsBottom();
+  }
   
   //display the acceleration and velocity vectors of the ball
   // display() {
@@ -344,19 +362,22 @@ function pen_res_fp(){
   pinball1.pos = pinball1.pos.subtr(pen_res);
 
 };
+let fireHappened = false;
 function collision_response_fp(pinBall, firingPin){
   //collision normal vec
-  let normal = pinball1.pos.subtr(firePin1.center);
-  // relative velocity
-  let relVel = pinball1.vel.subtr(firePin1.vel);
-  //separating veloicity
-  let sepVel = Vector.dot(relVel, normal);
-  //projection vallue multi -1
-  let new_sepVel = -sepVel;
-  let sepVelVec = normal.mult(new_sepVel);
+  // let normal = pinball1.pos.subtr(firePin1.center);
+  // // relative velocity
+  // let relVel = pinball1.vel.subtr(firePin1.vel);
+  // //separating veloicity
+  // let sepVel = Vector.dot(relVel, normal);
+  // //projection vallue multi -1
+  // let new_sepVel = -sepVel;
+  // let sepVelVec = normal.mult(new_sepVel);
   let changeVec = new Vector (0, -300);
 
   pinball1.vel = pinball1.vel.add(changeVec);
+  collhappened = true;
+  fireHappened = true;
   // pinballGrav();
 }
 console.log(pinball1.acc);
@@ -398,28 +419,28 @@ function gameLoop(timestamp) {
   flipperB.render();
 //firing pin
   firePin1.drawFiringPin();
-  
   // console.log(pinball1.x, firePin1.y);
-
+  
   // pinballGrav();
-// pinballFirepinColliding();
+  // pinballFirepinColliding();
 // console.log(pinballFirepinColliding());
 // console.log(pinball1.collisionFP);  
-  if(pinballFirepinColliding()){
+  if(pinballFirepinColliding() && !fireHappened){
     ctx.fillText("Collision", 200, 200);
     console.log('collision'); 
     pen_res_fp();
     collision_response_fp();
-    firePin1.reposition();
+    // firePin1.reposition();
     pinball1.reposition();
-    // pinball1.update();
-    console.log(pinball1.vel);
-    console.log(pinball1.pos.x, pinball1.pos.y);
-    collhappened = true;
+    
     // pinballGrav();
     // pinball1.reposition();
   }
-  
+  if(collhappened){
+    // pinball1.hitsBottom();
+    // pinball1.hitsTop();
+    pinball1.newPos();
+  }
   // pinballGrav();
   // function gravityPb (){
     // //  pinball1.vel += gravity;
