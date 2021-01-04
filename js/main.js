@@ -15,6 +15,7 @@ game.setAttribute('height', getComputedStyle(game)['height'])
 game.setAttribute('width', getComputedStyle(game)['width'])
 
 /* Variables */
+let friction = 0.0;
 //Firing Pin Variables
 let movementFP = 40;
 let movementFPpow = -55;
@@ -66,6 +67,7 @@ document.addEventListener('keydown', (e) => {
   movementFlipper();
   movementFiringPinBack();
   // movementPinball();
+  // movementPinball();
   
   });
 
@@ -75,14 +77,15 @@ document.addEventListener('keyup', (e) => {
   console.log(keyPresses);
   movementFlipperDown();
   movementFiringPinRelease();
-  console.log(fpin, pinballFirepinColliding());
+  // console.log(fpin);
 });
 
 function movementFiringPinBack() {
   if (keyPresses.KeyF === true && firePin1.y < 465) {
     // console.log('anything');
-    firePin1.y += movementFP;
-    fpin.y +=movementFP;
+    // firePin1.acceleration = 1;
+    // firePin1.acc.y = firePin1.acceleration;
+    firePin1.y +=movementFP;
     console.log(firePin1.y);
     // console.log(firePin1.start, firePin1.end);
   } 
@@ -94,10 +97,13 @@ let resetFiringPin = () => {
 function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.y > 410) {
     console.log(`key is up`);
+    // firePin1.acceleration = 1
+    // firePin1.acc.y = -firePin1.acceleration;
     firePin1.y += movementFPpow;
-    fpin.y += movementFPpow;
     console.log(fpin);
+    console.log(fpPos);
     // console.log(firePin1.start, firePin1.end);
+    console.log(firePin1.y);
     setTimeout(resetFiringPin, 1000);
   } 
 }
@@ -175,6 +181,10 @@ class Vector {
     ctx.stroke();
   }
 }
+//gravity vector!
+
+const gravity = new Vector(0, 9.81);
+
 //Dead Space - use a rectangle for now
 ctx.fillStyle = 'darkgreen';
 ctx.fillRect(0, 500, 500, 112);
@@ -195,6 +205,10 @@ class firingPin {
     this.start = new Vector (this.x, this.y)
     this.end = new Vector (this.x + width, this.y)
     this.center = new Vector (this.x+this.width/2, this.y+this.height/2)
+    this.r = this.center.y-this.y
+    this.vel = new Vector (0,0);
+    this.acc = gravity;
+    this.acceleration = 50;
     // //position of centerpoint of top of box
     // this.pos = new Vector(x + width/2, y)
   }
@@ -202,9 +216,13 @@ class firingPin {
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
-  firepinUnit(){
-    return this.end.subtr(this.start).unit();
-  }  
+  
+  reposition(){
+    this.acc = this.acc.unit().mult(this.acceleration);
+    this.vel = this.vel.add(this.acc);
+    this.vel = this.vel.mult(1-friction);
+    this.center = this.center.add(this.vel);
+  }
 }
 let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
 
@@ -248,12 +266,13 @@ class pinBall{
     this.r = r 
     this.color = color
     this.vel = new Vector(0,0);
-    this.acc = new Vector(0,0);
+    this.acc = new Vector (0,0);
+    this.acceleration = 1;
   }
   //draw the pinball
   drawPinball = (x,y,r,color) =>{
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, startAngle, endAngle, cClock);
+    ctx.arc(this.pos.x, this.pos.y, this.r, startAngle, endAngle, cClock);
     ctx.lineWidth = 2;
     ctx.strokeStyle = "black";
     ctx.fillStyle = this.color;
@@ -261,6 +280,15 @@ class pinBall{
     ctx.fill();
     ctx.closePath();
     }
+  reposition(){
+      // this.acc = this.acc.add(gravity);
+      // this.acc = this.acc.unit()
+      this.acc = this.acc.mult(this.acceleration);
+      this.vel = this.vel.add(this.acc);
+      this.vel = this.vel.mult(1-friction);
+      this.pos = this.pos.add(this.vel);
+    }
+  
   //display the acceleration and velocity vectors of the ball
   // display() {
   //   this.vel.drawVec(this.x, this.y, 10, 'green');
@@ -270,35 +298,72 @@ class pinBall{
 
 }
 let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
-
-
+pinballGrav = () =>{
+  if ((pinball1.pos.y + pinball1.r) < 610){
+    pinball1.vel = pinball1.vel.add(gravity);
+  }
+  console.log("pinball vel vector", pinball1.vel);
+};
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
 //Collision detection fucntion between the pinball and firing pin
 //Attempt to store values in objects 
+//Collision detection pinball and firing pin
 let pball = {x: pinball1.x, y: pinball1.y, r: pinball1.r};
 let fpin = {x: firePin1.x, y: firePin1.y, w: firePin1.width, h: firePin1.height}
-console.log(pball, fpin);
-console.log(pinball1.x, firePin1.x)
+// console.log(pball, fpin);
+// console.log(pinball1.x, firePin1.x)
 function pinballFirepinColliding(){
-  let distx = Math.abs(pball.x - (fpin.x+fpin.w/2));
-  let disty = Math.abs(pball.y - (fpin.y+fpin.h/2));
+  let distx = Math.abs(pinball1.pos.x - (firePin1.x+firePin1.width/2));
+  let disty = Math.abs(pinball1.pos.y - (firePin1.y+firePin1.height/2));
 
-  if (distx > (fpin.w/2 + pball.r)) { return false; }
-  if (disty > (fpin.h/2 + pball.r)) { return false; }
+  if (distx > (firePin1.width/2 + pinball1.r)) { return false; }
+  if (disty > (firePin1.height/2 + pinball1.r)) { return false; }
 
-  if (distx <= (fpin.w/2)) { return true; } 
-  if (disty <= (fpin.h/2)) { return true; }
+  if (distx <= (firePin1.width/2)) { return true; } 
+  if (disty <= (firePin1.height/2)) { return true; }
 
-  let dx=distx-fpin.w/2;
-  let dy=disty-fpin.h/2;
+  let dx=distx-firePin1.width/2;
+  let dy=disty-firePin1.height/2;
   return (dx**2+dy**2<=(pball.r**2));
 }
-
   console.log(pinballFirepinColliding());
-// console.log(pinballFirepinColliding());
-//Collision detection pinball and firing pin
-// penetration resolution between pinball and firing pin
+  let fpPos = new Vector(firePin1.center.x, firePin1.center.y);
+  let pballPosfp = new Vector(pball.x, pball.y);
+  let dist = pballPosfp.subtr(fpPos); 
+  // console.log(dist);
+  // console.log(fpPos);
+  
+  // let dist = pballPosfp.subtr(fpPos);
+  console.log(dist);
+  // penetration resolution between pinball and firing pin
+function pen_res_fp(){
+  let dist = pinball1.pos.subtr(firePin1.center);
+  let pen_depth = pinball1.r + firePin1.r - dist.mag();
+  console.log('firepin r' + firePin1.r)
+  console.log(pen_depth);
+  let pen_depth_div2 = pen_depth/2;
+  let pen_res = dist.unit().mult(pen_depth_div2);
+  console.log('pen res ' + pen_res);
+  pinball1.pos = pinball1.pos.subtr(pen_res);
+
+};
+function collision_response_fp(pinBall, firingPin){
+  //collision normal vec
+  let normal = pinball1.pos.subtr(firePin1.center);
+  // relative velocity
+  let relVel = pinball1.vel.subtr(firePin1.vel);
+  //separating veloicity
+  let sepVel = Vector.dot(relVel, normal);
+  //projection vallue multi -1
+  let new_sepVel = -sepVel;
+  let sepVelVec = normal.mult(new_sepVel);
+  let changeVec = new Vector (0, -300);
+
+  pinball1.vel = pinball1.vel.add(changeVec);
+  pinballGrav();
+}
+console.log(pinball1.acc);
 // collision resolution between pinball and firing pin
 
 //collision detect pinball and walls
@@ -318,7 +383,8 @@ function pinballFirepinColliding(){
 
 // main game loop canvas loop and redraw
 
-setInterval(function(){
+// setInterval(function(){
+function gameLoop(timestamp) {
   ctx.clearRect(0, 0, game.width, game.height);
   //Initial lane
   ctx.fillStyle = 'brown';
@@ -336,43 +402,44 @@ setInterval(function(){
   flipperB.render();
 //firing pin
   firePin1.drawFiringPin();
+  
   // console.log(pinball1.x, firePin1.y);
 
-  
+  // pinballGrav();
 // pinballFirepinColliding();
 // console.log(pinballFirepinColliding());
 // console.log(pinball1.collisionFP);  
-if(pinballFirepinColliding()){
+  if(pinballFirepinColliding()){
     ctx.fillText("Collision", 200, 200);
     console.log('collision'); 
+    pen_res_fp();
+    collision_response_fp();
+    firePin1.reposition();
+    pinball1.reposition();
+    // pinball1.update();
+    console.log(pinball1.vel);
   }
+  // function gravityPb (){
+  // //  pinball1.vel += gravity;
+  //   // console.log(pinball1.vel);
+  //   // pinball1.acc = pinball1.acc.add(gravity);
+  //   console.log(pinball1.acc);
 
-}, 1000/60);
-  
+  //   console.log(gravity);
+  // }
+  // setInterval(gravityPb, 1000);
 
-  
+  requestAnimationFrame(gameLoop);
+}
+// }, 1000/5);
 
-  /* Here I need to add a switch for all the if collision detection of pinball to objects */
-  //pinball and firiing pin
-  //pinball and walls
-  //pinball and flippers
-  //pinball and deadspace
-    //end game loop
-
-
-// Establish collision detection 
-  // pinball and flippers
-  // pinball and firing pin
-  // pinball and the game board
-  // pin ball and the dead space
-
-// Establish Collision movement / physics
-  // pinball and collision walls 
-  // pinball and collision with bumpers 
-  // initial firing
-  // motion / responsivitiy of the flippers
-
-// have functioning pinball with flippers firing pin and some kind of object / interaction on board as Minimum Viable Product by Tuesday December 29 9pm PST
+requestAnimationFrame(gameLoop);
+pinballGrav = () =>{
+  if ((pinball1.pos.y+pinball1.r) < 610){
+    pinball1.vel.add(gravity);
+  }
+  console.log("pinball acceleration vector", pinball1.acc);
+};
 
 //STRETCH GOALS AND FURTHER IMPLEMENTATION
 
