@@ -268,6 +268,7 @@ class pinBall{
     this.vel = new Vector(0,0);
     this.acc = new Vector (0,0);
     this.acceleration = 1;
+    this.edge = this.pos.x + this.r;
   }
   //draw the pinball
   drawPinball = (x,y,r,color) =>{
@@ -298,12 +299,7 @@ class pinBall{
 
 }
 let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
-pinballGrav = () =>{
-  if ((pinball1.pos.y + pinball1.r) < 610){
-    pinball1.vel = pinball1.vel.add(gravity);
-  }
-  console.log("pinball vel vector", pinball1.vel);
-};
+
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
 //Collision detection fucntion between the pinball and firing pin
@@ -361,7 +357,7 @@ function collision_response_fp(pinBall, firingPin){
   let changeVec = new Vector (0, -300);
 
   pinball1.vel = pinball1.vel.add(changeVec);
-  pinballGrav();
+  // pinballGrav();
 }
 console.log(pinball1.acc);
 // collision resolution between pinball and firing pin
@@ -382,7 +378,7 @@ console.log(pinball1.acc);
 //##### working but must figure out how to stop it from fully rotating when key is held down
 
 // main game loop canvas loop and redraw
-
+let collhappened = false;
 // setInterval(function(){
 function gameLoop(timestamp) {
   ctx.clearRect(0, 0, game.width, game.height);
@@ -418,43 +414,71 @@ function gameLoop(timestamp) {
     pinball1.reposition();
     // pinball1.update();
     console.log(pinball1.vel);
+    console.log(pinball1.pos.x, pinball1.pos.y);
+    collhappened = true;
+    // pinballGrav();
+    // pinball1.reposition();
   }
+  
+  // pinballGrav();
   // function gravityPb (){
-  // //  pinball1.vel += gravity;
-  //   // console.log(pinball1.vel);
-  //   // pinball1.acc = pinball1.acc.add(gravity);
-  //   console.log(pinball1.acc);
-
-  //   console.log(gravity);
-  // }
-  // setInterval(gravityPb, 1000);
-
-  requestAnimationFrame(gameLoop);
-}
-// }, 1000/5);
-
-requestAnimationFrame(gameLoop);
-pinballGrav = () =>{
-  if ((pinball1.pos.y+pinball1.r) < 610){
-    pinball1.vel.add(gravity);
+    // //  pinball1.vel += gravity;
+    //   // console.log(pinball1.vel);
+    //   // pinball1.acc = pinball1.acc.add(gravity);
+    //   console.log(pinball1.acc);
+    
+    //   console.log(gravity);
+    // }
+    // setInterval(gravityPb, 1000);
+    
+    requestAnimationFrame(gameLoop);
   }
-  console.log("pinball acceleration vector", pinball1.acc);
-};
-
-//STRETCH GOALS AND FURTHER IMPLEMENTATION
-
-// add lanes with words
-
-// Create a scoring system and bonus conditions
-
-// add circular bumpers
-
-// add targets
-
-// add multiball 
-
-// add music 
-
-// add visual elements
-
-// second level
+  // }, 1000/5);
+  // pinballGrav = () =>{
+    //   if ((pinball1.pos.y + pinball1.r) < 590){
+      //     pinball1.pos.y += 9.81;
+      
+      //   }
+      //   console.log("pinball vel vector", pinball1.vel);
+      // };
+      // pinballGrav();
+      //   pingravTimeout = () =>{
+        //     // setInterval(pinballGrav(), 1000);
+        //     pinballGrav();
+        //   }
+        //  setTimeout(pingravTimeout, 1000/60);
+        
+        
+        requestAnimationFrame(gameLoop);
+        // pinballGrav = () =>{
+        //   if(collhappened && pinball1.edge <= 600){
+        //     pinball1.pos.y += 9.81
+        //   // pinball1.vel = pinball1.vel.add(gravity);
+        //   // pinball1.reposition();
+        //   console.log(pinball1.vel, pinball1.pos);
+        //   }
+        // }
+          //   if ((pinball1.pos.y+pinball1.r) < 610){
+            //     pinball1.vel.add(gravity);
+            //   }
+            //   console.log("pinball acceleration vector", pinball1.acc);
+            // };
+            
+            //STRETCH GOALS AND FURTHER IMPLEMENTATION
+            
+            // add lanes with words
+            
+            // Create a scoring system and bonus conditions
+            
+            // add circular bumpers
+            
+            // add targets
+            
+            // add multiball 
+            
+            // add music 
+            
+            // add visual elements
+            
+            // second level
+            
