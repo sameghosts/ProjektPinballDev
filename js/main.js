@@ -223,12 +223,12 @@ class firingPin {
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
   
-  reposition(){
-    this.acc = this.acc.unit().mult(this.acceleration);
-    this.vel = this.vel.add(this.acc);
-    this.vel = this.vel.mult(1-friction);
-    this.center = this.center.add(this.vel);
-  }
+  // reposition(){
+  //   this.acc = this.acc.unit().mult(this.acceleration);
+  //   this.vel = this.vel.add(this.acc);
+  //   this.vel = this.vel.mult(1-friction);
+  //   this.center = this.center.add(this.vel);
+  // }
 }
 let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
 
@@ -236,7 +236,8 @@ let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
 //z = keyCode === 90
   // / = keyCode === 191
 //Start with rectangles? then move to series of overlapping circles?
-function drawFlipper(x, y, width, height, degrees, color, flipRX, flipRY){
+class flipper {
+constructor(x, y, width, height, degrees, color, flipRX, flipRY){
   this.x = x
   this.y = y
   this.width = width
@@ -245,7 +246,8 @@ function drawFlipper(x, y, width, height, degrees, color, flipRX, flipRY){
   this.color = color
   this.flipRX = flipRX
   this.flipRY = flipRY
-  this.render = function() {
+}
+  drawFlipper = (x, y, width, height, degrees, color, flipRX, flipRY) => {
     ctx.save();
     ctx.beginPath();
     ctx.translate(this.flipRX, this.flipRY);
@@ -259,9 +261,9 @@ function drawFlipper(x, y, width, height, degrees, color, flipRX, flipRY){
     ctx.restore();
   }
 } 
-let flipperA = new drawFlipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAng, flipColor, flipAXR, flipAYR);
+let flipperA = new flipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAng, flipColor, flipAXR, flipAYR);
 
-let flipperB = new drawFlipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
+let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
 
 //Pinball
 class pinBall{
@@ -481,9 +483,9 @@ function gameLoop(timestamp) {
   pinball1.drawPinball();
   // console.log(pinball1.y);
   //left flipper
-  flipperA.render();
+  flipperA.drawFlipper();
   //right flipper
-  flipperB.render();
+  flipperB.drawFlipper();
 //firing pin
   firePin1.drawFiringPin();
   //
