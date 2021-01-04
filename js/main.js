@@ -14,8 +14,13 @@ let ctx = game.getContext('2d')
 game.setAttribute('height', getComputedStyle(game)['height'])
 game.setAttribute('width', getComputedStyle(game)['width'])
 
+const wallsArr = [];
+const pbsArr = [];
+console.log("canvas width " + game.clientWidth);
+console.log("canvas height " + game.clientHeight);
+
 /* Variables */
-let friction = 0.0;
+let friction = 0.05;
 //Firing Pin Variables
 let movementFP = 40;
 let movementFPpow = -55;
@@ -271,7 +276,7 @@ class pinBall{
     } else {
       this.inv_m = 1 / this.m;
     }
-    this.elasticity = 1;
+    this.elasticity = 30;
     this.color = color
     this.vel = new Vector(0,0);
     this.acc = new Vector (0,0);
@@ -280,6 +285,7 @@ class pinBall{
     this.gravitySpeed = 0;
     this.acceleration = 1;
     this.edge = this.pos.x + this.r;
+    pbsArr.push(this);
   }
   //draw the pinball
   drawPinball = (x,y,r,color) =>{
@@ -293,9 +299,9 @@ class pinBall{
     ctx.closePath();
     }
   reposition = () =>{
-      this.acc = this.acc.add(gravity);
+      // this.acc = this.acc.add(gravity);
       // this.acc = this.acc.unit()
-      this.acc = this.acc.mult(this.acceleration);
+      this.acc = this.acc.unit().mult(this.acceleration);
       this.vel = this.vel.add(this.acc);
       this.vel = this.vel.mult(1-friction);
       this.pos = this.pos.add(this.vel);
@@ -324,6 +330,27 @@ class pinBall{
 
 }
 let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass);
+
+//wall class, segment btwn two different points
+// i hope the push method for this works and that the physics response works
+class Wall{
+  constructor (x1, y1, x2, y2){
+    this.start = new Vector(x1, y1);
+    this.end = new Vector(x2, y2);
+    wallsArr.push(this);
+  }
+  drawWall(){
+    ctx.beginPath();
+    ctx.moveTo(this.start.x, this.start.y);
+    ctx.lineTo(this.end.x, this.end.y);
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+    ctx.closePath();
+  }
+  wallUnit(){
+    return this.end.subtr(this.start).unit();
+  }
+}
 
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
@@ -380,7 +407,7 @@ function collision_response_fp(pinBall, firingPin){
   // //projection vallue multi -1
   // let new_sepVel = -sepVel;
   // let sepVelVec = normal.mult(new_sepVel);
-  let changeVec = new Vector (0, -300);
+  let changeVec = new Vector (0, -375);
 
   pinball1.vel = pinball1.vel.add(changeVec);
   collhappened = true;
@@ -391,9 +418,42 @@ console.log(pinball1.acc);
 // collision resolution between pinball and firing pin
 
 //collision detect pinball and walls
-//pen resolution between pinball and walls 
-//collision resolution between pinball and walls
+function closestPointPbW (b1, w1){
+  let ballToWallStart = w1.start.subtr(pinball1.pos);
+  if(Vector.dot(w1.wallUnit(), ballToWallStart) > 0){
+    return w1.start;
+  } 
+  let wallEndToBall = b1.pos.subtr(w1.end);
+  if (Vector.dot(w1.wallUnit(), wallEndToBall) > 0){
+    return w1.end;
+  }
+  let closestDist = Vector.dot(w1.wallUnit(), ballToWallStart);
+  let closestVect = w1.wallUnit().mult(closestDist);
+  return w1.start.subtr(closestVect);
 
+}
+function coll_det_PbW (b1, w1){
+  let ballToClosest = closestPointPbW(b1, w1).subtr(b1.pos);
+  if (ballToClosest.mag() <= b1.r){
+    return true;
+  }
+}
+//pen resolution between pinball and walls 
+function pen_res_PbW (b1, w1){
+  let penVect = b1.pos.subtr(closestPointPbW(b1, w1));
+  b1.pos = b1.pos.add(penVect.unit().mult(b1.r-penVect.mag()));
+
+}
+//collision resolution between pinball and walls
+function coll_res_PbW (b1, w1){
+  let normal = b1.pos.subtr(closestPointPbW(b1,w1)).unit();
+  let sepVel = Vector.dot(b1.vel, normal);
+  let new_sepVel = -sepVel * b1.elasticity;
+  let vsep_diff = sepVel - new_sepVel;
+  b1.vel = b1.vel.add(normal.mult(-vsep_diff));
+  console.log("add pb vel " + normal.mult(-vsep_diff));
+  // b1.reposition;
+}
 //collision detection pinball and flippers
 //pen resolution between pinball and flippers
 //collision resolution betweeen pinball and flippers
@@ -426,12 +486,15 @@ function gameLoop(timestamp) {
   flipperB.render();
 //firing pin
   firePin1.drawFiringPin();
-  // console.log(pinball1.x, firePin1.y);
+  //
+  wallsArr.forEach((w) =>{
+    if(coll_det_PbW(pinball1, w)){
+      pen_res_PbW(pinball1, w);
+      coll_res_PbW(pinball1, w);
+      // pinball1.reposition();
+    }
+    })
   
-  // pinballGrav();
-  // pinballFirepinColliding();
-// console.log(pinballFirepinColliding());
-// console.log(pinball1.collisionFP);  
   if(pinballFirepinColliding()){
     ctx.fillText("Collision", 200, 200);
     console.log('collision'); 
@@ -445,11 +508,19 @@ function gameLoop(timestamp) {
     // pinballGrav();
     // pinball1.reposition();
   }
-  if(collhappened){
-    // pinball1.hitsBottom();
-    // pinball1.hitsTop();
-    pinball1.newPos();
-  }
+  // if(collhappened){
+  //   // pinball1.hitsBottom();
+  //   // pinball1.hitsTop();
+  //   pinball1.newPos();
+  // }
+  wallsArr.forEach((w)=>{
+    w.drawWall();
+  })
+  let edge1 = new Wall(0, 0, game.clientWidth, 0);
+  let edge2 = new Wall(game.clientWidth, 0, game.clientWidth, game.clientHeight);
+  let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight);
+  let edge4 = new Wall(0, game.clientHeight, 0, 0);
+  let WallInitLaneAng = new Wall(570, 60, 490, 0);
   // pinballGrav();
   // function gravityPb (){
     // //  pinball1.vel += gravity;
