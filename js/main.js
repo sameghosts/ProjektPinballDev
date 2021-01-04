@@ -54,12 +54,7 @@ const cClock = false;
 const ballColor = '#a39d9b';
 const pbmass = 1;
 
-/* MOVEMENT HANDLERS */
-// document.addEventListener('keydown', movementFiringPinBack);
-// document.addEventListener('keyup', movementFiringPinRelease);
-// document.addEventListener('keydown', movementFlipper);
-// document.addEventListener('keyup', movementFlipperDown);
-// document.addEventListener('keydown', movementPinball);
+/* MOVEMENT HANDLERS ALPHABETIZED */
 
 //KEY PRESS MOVEMENT HANDLERS 
 
@@ -88,12 +83,8 @@ document.addEventListener('keyup', (e) => {
 
 function movementFiringPinBack() {
   if (keyPresses.KeyF === true && firePin1.y < 465) {
-    // console.log('anything');
-    // firePin1.acceleration = 1;
-    // firePin1.acc.y = firePin1.acceleration;
     firePin1.y +=movementFP;
     console.log(firePin1.y);
-    // console.log(firePin1.start, firePin1.end);
   } 
 }
 let resetFiringPin = () => {
@@ -103,12 +94,7 @@ let resetFiringPin = () => {
 function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.y > 410) {
     console.log(`key is up`);
-    // firePin1.acceleration = 1
-    // firePin1.acc.y = -firePin1.acceleration;
     firePin1.y += movementFPpow;
-    console.log(fpin);
-    console.log(fpPos);
-    // console.log(firePin1.start, firePin1.end);
     console.log(firePin1.y);
     setTimeout(resetFiringPin, 1000);
   } 
@@ -133,13 +119,13 @@ let movementFlipperDown = () => {
   }
 }
 
-function movementPinball(e) {
-  if (e.key === 'w') {
-    pinball1.y += 10;
-  }
-}
+// function movementPinball(e) {
+//   if (e.key === 'w') {
+//     pinball1.y += 10;
+//   }
+// }
 
-/* Classes and constructors */
+/* Classes and constructors AlPHABETIZED*/
 //Vector Class for collision detection
 class Vector {
   constructor (x,y){
@@ -188,15 +174,14 @@ class Vector {
   }
 }
 //gravity vector!
+// const gravity = new Vector(0, 9.81);
 
-const gravity = new Vector(0, 9.81);
-
-//Dead Space - use a rectangle for now
+//Dead Space - use a rectangle for now, #### refactor into class for collision detection and game state boolean logic
 ctx.fillStyle = 'darkgreen';
 ctx.fillRect(0, 500, 500, 112);
 ctx.closePath();
 
-//Initial lane
+//Initial lane - #### eventually refactor into a class for detection, perhaps a lane class that can be pushed to array
 ctx.fillStyle = 'brown';
 ctx.fillRect(500, 175, 15, 435);
 
@@ -222,7 +207,7 @@ class firingPin {
     ctx.fillStyle = this.color
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
-  
+  //unnecessary method if I can figure out new physics method
   // reposition(){
   //   this.acc = this.acc.unit().mult(this.acceleration);
   //   this.vel = this.vel.add(this.acc);
@@ -233,9 +218,7 @@ class firingPin {
 let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
 
 //Flippers
-//z = keyCode === 90
-  // / = keyCode === 191
-//Start with rectangles? then move to series of overlapping circles?
+//Start with rectangles? #### update these into sprites eventually? use the rectangle as hitbox
 class flipper {
 constructor(x, y, width, height, degrees, color, flipRX, flipRY){
   this.x = x
@@ -314,27 +297,20 @@ class pinBall{
       this.pos.y = bottomEdge;
     }
   }
-  
-  
   newPos = () => {
     this.gravitySpeed += this.gravity;
     this.pos.x += this.speed.x;
     this.pos.y += this.speed.y +this.gravitySpeed;
     this.hitsBottom();
   }
-  
-  //display the acceleration and velocity vectors of the ball
-  // display() {
-  //   this.vel.drawVec(this.x, this.y, 10, 'green');
-  //   this.acc.drawVec(this.x, this.y, 100, 'red');
-  // }
-  
-
+//add an update function for pinball class that updates movement and collision vectors with new simpler physics
 }
 let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass);
 
+//#### should I push all game objects into a object array in order to more easily manage collision detection or is that unnecessary and counter-intuitive
+
 //wall class, segment btwn two different points
-// i hope the push method for this works and that the physics response works
+// i hope the push method for this works and that the physics response works #### figure out new collision physics for pinball and walls
 class Wall{
   constructor (x1, y1, x2, y2){
     this.start = new Vector(x1, y1);
@@ -356,38 +332,32 @@ class Wall{
 
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
-//Collision detection fucntion between the pinball and firing pin
-//Attempt to store values in objects 
+
+/* I think the following code is unnecessary and no longer implemented. #### delete
+// // let pball = {x: pinball1.x, y: pinball1.y, r: pinball1.r};
+// // let fpin = {x: firePin1.x, y: firePin1.y, w: firePin1.width, h: firePin1.height}
+// // console.log(pball, fpin);
+// // console.log(pinball1.x, firePin1.x)
+*/
 //Collision detection pinball and firing pin
-let pball = {x: pinball1.x, y: pinball1.y, r: pinball1.r};
-let fpin = {x: firePin1.x, y: firePin1.y, w: firePin1.width, h: firePin1.height}
-// console.log(pball, fpin);
-// console.log(pinball1.x, firePin1.x)
 function pinballFirepinColliding(){
   let distx = Math.abs(pinball1.pos.x - (firePin1.x+firePin1.width/2));
   let disty = Math.abs(pinball1.pos.y - (firePin1.y+firePin1.height/2));
-
+  //sides check
   if (distx > (firePin1.width/2 + pinball1.r)) { return false; }
   if (disty > (firePin1.height/2 + pinball1.r)) { return false; }
 
   if (distx <= (firePin1.width/2)) { return true; } 
   if (disty <= (firePin1.height/2)) { return true; }
-
+  //pythag theorem for corner
   let dx=distx-firePin1.width/2;
   let dy=disty-firePin1.height/2;
   return (dx**2+dy**2<=(pball.r**2));
 }
-  console.log(pinballFirepinColliding());
-  let fpPos = new Vector(firePin1.center.x, firePin1.center.y);
-  let pballPosfp = new Vector(pball.x, pball.y);
-  let dist = pballPosfp.subtr(fpPos); 
-  // console.log(dist);
-  // console.log(fpPos);
-  
-  // let dist = pballPosfp.subtr(fpPos);
-  console.log(dist);
+
   // penetration resolution between pinball and firing pin
 function pen_res_fp(){
+  //refactor into different and simpler math?
   let dist = pinball1.pos.subtr(firePin1.center);
   let pen_depth = pinball1.r + firePin1.r - dist.mag();
   console.log('firepin r' + firePin1.r)
@@ -396,11 +366,16 @@ function pen_res_fp(){
   let pen_res = dist.unit().mult(pen_depth_div2);
   console.log('pen res ' + pen_res);
   pinball1.pos = pinball1.pos.subtr(pen_res);
-
+  
 };
+
+// collision resolution between pinball and firing pin
+let collhappened = false;
 let fireHappened = false;
 function collision_response_fp(pinBall, firingPin){
-  //collision normal vec
+  //Old method probaly good to delete but update so my new method is not just cheating
+
+  //collision normal vec 
   // let normal = pinball1.pos.subtr(firePin1.center);
   // // relative velocity
   // let relVel = pinball1.vel.subtr(firePin1.vel);
@@ -409,18 +384,19 @@ function collision_response_fp(pinBall, firingPin){
   // //projection vallue multi -1
   // let new_sepVel = -sepVel;
   // let sepVelVec = normal.mult(new_sepVel);
+  
+  //fake / cheater method for vector change, create a new solution for this using the new update methods for the pinball class 
   let changeVec = new Vector (0, -375);
-
   pinball1.vel = pinball1.vel.add(changeVec);
+  //boolean to prevent continual collision response for the pinball after the firing has fired
   collhappened = true;
   fireHappened = true;
-  // pinballGrav();
 }
-console.log(pinball1.acc);
-// collision resolution between pinball and firing pin
+
 
 //collision detect pinball and walls
 function closestPointPbW (b1, w1){
+  //refactor this math if needed for collision detection and response
   let ballToWallStart = w1.start.subtr(pinball1.pos);
   if(Vector.dot(w1.wallUnit(), ballToWallStart) > 0){
     return w1.start;
@@ -435,6 +411,7 @@ function closestPointPbW (b1, w1){
 
 }
 function coll_det_PbW (b1, w1){
+  //working but could be refactored, perhaps unnecessary
   let ballToClosest = closestPointPbW(b1, w1).subtr(b1.pos);
   if (ballToClosest.mag() <= b1.r){
     return true;
@@ -442,12 +419,14 @@ function coll_det_PbW (b1, w1){
 }
 //pen resolution between pinball and walls 
 function pen_res_PbW (b1, w1){
+//come back to this mathematics after you have refactored pinball physics and update ##### 
   let penVect = b1.pos.subtr(closestPointPbW(b1, w1));
   b1.pos = b1.pos.add(penVect.unit().mult(b1.r-penVect.mag()));
 
 }
 //collision resolution between pinball and walls
 function coll_res_PbW (b1, w1){
+  //come back to this mathematics after you have refactored pinball physics and update ##### 
   let normal = b1.pos.subtr(closestPointPbW(b1,w1)).unit();
   let sepVel = Vector.dot(b1.vel, normal);
   let new_sepVel = -sepVel * b1.elasticity;
@@ -463,12 +442,14 @@ function coll_res_PbW (b1, w1){
 //collision detection pinball and dead space
 //pen resolution between pinball and dead space
 //collision resolution between pinball and dead space 
-//function end game loop
 
-//##### working but must figure out how to stop it from fully rotating when key is held down
+/*Game Mechanics */
+//Lives feature and reset
+//function end game loop
+//score system
+
 
 // main game loop canvas loop and redraw
-let collhappened = false;
 // setInterval(function(){
 function gameLoop(timestamp) {
   ctx.clearRect(0, 0, game.width, game.height);
@@ -523,65 +504,24 @@ function gameLoop(timestamp) {
   let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight);
   let edge4 = new Wall(0, game.clientHeight, 0, 0);
   let WallInitLaneAng = new Wall(570, 60, 490, 0);
-  // pinballGrav();
-  // function gravityPb (){
-    // //  pinball1.vel += gravity;
-    //   // console.log(pinball1.vel);
-    //   // pinball1.acc = pinball1.acc.add(gravity);
-    //   console.log(pinball1.acc);
-    
-    //   console.log(gravity);
-    // }
-    // setInterval(gravityPb, 1000);
+  
     
     requestAnimationFrame(gameLoop);
   }
   // }, 1000/5);
-  // pinballGrav = () =>{
-    //   if ((pinball1.pos.y + pinball1.r) < 590){
-      //     pinball1.pos.y += 9.81;
-      
-      //   }
-      //   console.log("pinball vel vector", pinball1.vel);
-      // };
-      // pinballGrav();
-      //   pingravTimeout = () =>{
-        //     // setInterval(pinballGrav(), 1000);
-        //     pinballGrav();
-        //   }
-        //  setTimeout(pingravTimeout, 1000/60);
-        
-        
+  
         requestAnimationFrame(gameLoop);
-        // pinballGrav = () =>{
-        //   if(collhappened && pinball1.edge <= 600){
-        //     pinball1.pos.y += 9.81
-        //   // pinball1.vel = pinball1.vel.add(gravity);
-        //   // pinball1.reposition();
-        //   console.log(pinball1.vel, pinball1.pos);
-        //   }
-        // }
-          //   if ((pinball1.pos.y+pinball1.r) < 610){
-            //     pinball1.vel.add(gravity);
-            //   }
-            //   console.log("pinball acceleration vector", pinball1.acc);
-            // };
-            
-            //STRETCH GOALS AND FURTHER IMPLEMENTATION
-            
-            // add lanes with words
-            
-            // Create a scoring system and bonus conditions
-            
-            // add circular bumpers
-            
-            // add targets
-            
-            // add multiball 
-            
-            // add music 
-            
-            // add visual elements
-            
-            // second level
-            
+        
+/* Stretch Goals and Further implementation */
+//In order of importance and desire to get to post MVP
+// Create a scoring system and bonus conditions
+// add circular bumpers
+// add visual elements / sprites
+
+// add music 
+
+// add lanes with words
+// add targets
+
+// add multiball 
+// second level
