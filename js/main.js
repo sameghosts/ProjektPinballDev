@@ -20,6 +20,10 @@ console.log("canvas width " + game.clientWidth);
 console.log("canvas height " + game.clientHeight);
 
 /* Variables */
+//Game loop and time stamp (seconda passed, timestamp, frames per second)
+let secondsPassed = 0;
+let oldTimeStamp = 0;
+let fps;
 let friction = 0.05;
 //Firing Pin Variables
 let movementFP = 40;
@@ -89,7 +93,7 @@ function movementFiringPinBack() {
 }
 let resetFiringPin = () => {
   firePin1.y = pinY;
-  fpin.y = pinY;
+  // fpin.y = pinY;
 }
 function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.y > 410) {
@@ -150,12 +154,9 @@ class Vector {
   }
 
   unit(){
-    if(this.mag() === 0){
-      return new Vector (0,0);
-    } else {
     return new Vector (this.x/this.mag(), this.y/this.mag());
     }
-  }
+  
 
   normal(){
     return new Vector(-this.y, this.x).unit();
@@ -187,18 +188,20 @@ ctx.fillRect(500, 175, 15, 435);
 
 //Firing pin 
 class firingPin {
-  constructor(x, y, width, height, color) {
+  constructor(x, y, width, height, color, vx, vy) {
     this.x = x
     this.y = y
     this.width = width
     this.height = height
     this.color = color
+    this.vx= vx;
+    this.vy= vy;
     this.start = new Vector (this.x, this.y)
     this.end = new Vector (this.x + width, this.y)
     this.center = new Vector (this.x+this.width/2, this.y+this.height/2)
     this.r = this.center.y-this.y
-    this.vel = new Vector (0,0);
-    this.acc = gravity;
+    this.vel = new Vector (this.vx, this.vy);
+    this.acc = new Vector (0, 0);
     this.acceleration = 50;
     // //position of centerpoint of top of box
     // this.pos = new Vector(x + width/2, y)
@@ -215,7 +218,7 @@ class firingPin {
   //   this.center = this.center.add(this.vel);
   // }
 }
-let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor);
+let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, 0);
 
 //Flippers
 //Start with rectangles? #### update these into sprites eventually? use the rectangle as hitbox
@@ -250,11 +253,13 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
 
 //Pinball
 class pinBall{
-  constructor (x,y,r,color, m){
+  constructor (x,y,r,color,m, vx, vy){
     this.x = x
     this.y = y
     this.pos = new Vector(x,y);
     this.r = r 
+    this.vx = vx;
+    this.vy = vy;
     this.m = m
     if (this.m === 0){
       this.inv_m = 0;
@@ -263,7 +268,7 @@ class pinBall{
     }
     this.elasticity = 30;
     this.color = color
-    this.vel = new Vector(0,0);
+    this.vel = new Vector(this.vx, this.vy);
     this.acc = new Vector (0,0);
     this.speed = new Vector (0,0);
     this.gravity = 0.05;
@@ -352,7 +357,7 @@ function pinballFirepinColliding(){
   //pythag theorem for corner
   let dx=distx-firePin1.width/2;
   let dy=disty-firePin1.height/2;
-  return (dx**2+dy**2<=(pball.r**2));
+  return (dx**2+dy**2<=(pinball1.r**2));
 }
 
   // penetration resolution between pinball and firing pin
@@ -364,8 +369,13 @@ function pen_res_fp(){
   console.log(pen_depth);
   let pen_depth_div2 = pen_depth/2;
   let pen_res = dist.unit().mult(pen_depth_div2);
-  console.log('pen res ' + pen_res);
+  // console.log(Object.keys(pen_res));
+  console.log(pen_res.x, pen_res.y);
+  // console.log('pen res ' + pen_res);
+  console.log(pen_res);
+  console.log(pinball1.pos);
   pinball1.pos = pinball1.pos.subtr(pen_res);
+  console.log(pinball1.pos);
   
 };
 
@@ -386,6 +396,17 @@ function collision_response_fp(pinBall, firingPin){
   // let sepVelVec = normal.mult(new_sepVel);
   
   //fake / cheater method for vector change, create a new solution for this using the new update methods for the pinball class 
+  
+  //collision vector of impact firing pin and pinball
+  let vecCollision = new Vector (pinball1.pos.x-firePin1.center.x, pinball1.pos.y-firePin1.center.y);
+  console.log(vecCollision);
+  //distance of collision vector (magnitude):
+  let distance = vecCollision.mag();
+  console.log('distance of col vec ' + distance);
+  //normalized collision vector or unit vector(collsion vector with mag 1)
+  let vecCollisionNorm = vecCollision.unit();
+let v
+
   let changeVec = new Vector (0, -375);
   pinball1.vel = pinball1.vel.add(changeVec);
   //boolean to prevent continual collision response for the pinball after the firing has fired
@@ -452,6 +473,13 @@ function coll_res_PbW (b1, w1){
 // main game loop canvas loop and redraw
 // setInterval(function(){
 function gameLoop(timestamp) {
+
+  //calc for seconds 
+  secondsPassed = (timestamp-oldTimeStamp)/1000;
+  oldTimeStamp = timeStamp;
+
+  //calc frames per second
+  fps = Math.round(1 / secondsPassed);
   ctx.clearRect(0, 0, game.width, game.height);
   //Initial lane
   ctx.fillStyle = 'brown';
