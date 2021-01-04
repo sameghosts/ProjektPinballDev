@@ -47,6 +47,7 @@ const startAngle = 0;
 const endAngle = 2 * Math.PI;
 const cClock = false;
 const ballColor = '#a39d9b';
+const pbmass = 1;
 
 /* MOVEMENT HANDLERS */
 // document.addEventListener('keydown', movementFiringPinBack);
@@ -259,18 +260,24 @@ let flipperB = new drawFlipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitA
 
 //Pinball
 class pinBall{
-  constructor (x,y,r,color){
+  constructor (x,y,r,color, m){
     this.x = x
     this.y = y
     this.pos = new Vector(x,y);
     this.r = r 
+    this.m = m
+    if (this.m === 0){
+      this.inv_m = 0;
+    } else {
+      this.inv_m = 1 / this.m;
+    }
+    this.elasticity = 1;
     this.color = color
     this.vel = new Vector(0,0);
     this.acc = new Vector (0,0);
     this.speed = new Vector (0,0);
     this.gravity = 0.05;
     this.gravitySpeed = 0;
-
     this.acceleration = 1;
     this.edge = this.pos.x + this.r;
   }
@@ -316,7 +323,7 @@ class pinBall{
   
 
 }
-let pinball1 = new pinBall (ballX, ballY, radius, ballColor);
+let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass);
 
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
@@ -425,11 +432,13 @@ function gameLoop(timestamp) {
   // pinballFirepinColliding();
 // console.log(pinballFirepinColliding());
 // console.log(pinball1.collisionFP);  
-  if(pinballFirepinColliding() && !fireHappened){
+  if(pinballFirepinColliding()){
     ctx.fillText("Collision", 200, 200);
     console.log('collision'); 
     pen_res_fp();
+    if(!fireHappened){
     collision_response_fp();
+    }
     // firePin1.reposition();
     pinball1.reposition();
     
