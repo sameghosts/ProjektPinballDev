@@ -27,9 +27,9 @@ let fps;
 let friction = 0.05;
 //Firing Pin Variables
 let movementFP = 40;
-let movementFPpow = -55;
+let movementFPpow = -155;
 let pinX = 520;
-let pinY = 425;
+let pinY = 420;
 let pinWidth = 40;
 let pinHeight = 125;
 let pinColor = 'orange';
@@ -87,7 +87,7 @@ document.addEventListener('keyup', (e) => {
 
 function movementFiringPinBack() {
   if (keyPresses.KeyF === true && firePin1.y < 465) {
-    firePin1.y +=movementFP;
+    firePin1.center.y +=movementFP;
     console.log(firePin1.y);
   } 
 }
@@ -98,7 +98,8 @@ let resetFiringPin = () => {
 function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.y > 410) {
     console.log(`key is up`);
-    firePin1.y += movementFPpow;
+    firePin1.vy += movementFPpow;
+    // firePin1.update();
     console.log(firePin1.y);
     setTimeout(resetFiringPin, 1000);
   } 
@@ -208,7 +209,7 @@ class firingPin {
   }
   drawFiringPin = (x, y, width, height, color) =>{
     ctx.fillStyle = this.color
-    ctx.fillRect(this.x, this.y, this.width, this.height)
+    ctx.fillRect(this.center.x-this.width/2, this.center.y-this.height/2, this.width, this.height)
   }
   //unnecessary method if I can figure out new physics method
   // reposition(){
@@ -217,6 +218,10 @@ class firingPin {
   //   this.vel = this.vel.mult(1-friction);
   //   this.center = this.center.add(this.vel);
   // }
+  update = (secondsPassed) =>{
+    this.center.x += this.vx * secondsPassed;
+    this.center.y += this.vx * secondsPassed;
+  }
 }
 let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, 0);
 
@@ -308,9 +313,15 @@ class pinBall{
     this.pos.y += this.speed.y +this.gravitySpeed;
     this.hitsBottom();
   }
+  //essential new reposition function
+  update = (secondsPassed) =>{
+    this.pos.x += this.vx * secondsPassed;
+    this.pos.y += this.vx * secondsPassed;
+
+  }
 //add an update function for pinball class that updates movement and collision vectors with new simpler physics
 }
-let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass);
+let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass, 0, 0);
 
 //#### should I push all game objects into a object array in order to more easily manage collision detection or is that unnecessary and counter-intuitive
 
@@ -383,18 +394,6 @@ function pen_res_fp(){
 let collhappened = false;
 let fireHappened = false;
 function collision_response_fp(pinBall, firingPin){
-  //Old method probaly good to delete but update so my new method is not just cheating
-
-  //collision normal vec 
-  // let normal = pinball1.pos.subtr(firePin1.center);
-  // // relative velocity
-  // let relVel = pinball1.vel.subtr(firePin1.vel);
-  // //separating veloicity
-  // let sepVel = Vector.dot(relVel, normal);
-  // //projection vallue multi -1
-  // let new_sepVel = -sepVel;
-  // let sepVelVec = normal.mult(new_sepVel);
-  
   //fake / cheater method for vector change, create a new solution for this using the new update methods for the pinball class 
   
   //collision vector of impact firing pin and pinball
@@ -405,10 +404,19 @@ function collision_response_fp(pinBall, firingPin){
   console.log('distance of col vec ' + distance);
   //normalized collision vector or unit vector(collsion vector with mag 1)
   let vecCollisionNorm = vecCollision.unit();
-let v
-
-  let changeVec = new Vector (0, -375);
-  pinball1.vel = pinball1.vel.add(changeVec);
+  let vRelativeVelocity = pinball1.vel.subtr(firePin1.vel);
+  let speed = vRelativeVelocity.x * vecCollisionNorm.x + vRelativeVelocity.y * vecCollisionNorm.y;
+  // if (speed<0) {
+  //   break;
+  // } 
+    //collision velocity
+    let vecCollisionVel = vecCollisionNorm.mult(speed);
+    pinball1.vx -= vecCollisionVel.x;
+    pinball1.vy -= vecCollisionVel.y;
+    firePin1.vx += vecCollisionVel.x;
+    firePin1.vy += vecCollisionVel.y;
+  
+//now i need to update the movement of the firing pin on release to be part of the update
   //boolean to prevent continual collision response for the pinball after the firing has fired
   collhappened = true;
   fireHappened = true;
@@ -472,10 +480,10 @@ function coll_res_PbW (b1, w1){
 
 // main game loop canvas loop and redraw
 // setInterval(function(){
-function gameLoop(timestamp) {
+function gameLoop(timeStamp) {
 
   //calc for seconds 
-  secondsPassed = (timestamp-oldTimeStamp)/1000;
+  secondsPassed = (timeStamp-oldTimeStamp)/1000;
   oldTimeStamp = timeStamp;
 
   //calc frames per second
