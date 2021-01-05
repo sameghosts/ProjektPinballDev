@@ -513,7 +513,7 @@ function coll_res_PbW (b1, w1){
   //   pinball1.vy = 0;
   //   pinball1.pos.y = pinball1.r;
   // }
-  if(pinball1.pos.y + pinball1.r <= 152 && !pinballHeightPass){
+  if(pinball1.pos.y + pinball1.r <= 136 && !pinballHeightPass){
     turnOnGrav = true;
     let wallLaneGate = new Wall(500, 175, game.clientWidth, 100);
   }
