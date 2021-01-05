@@ -27,7 +27,7 @@ let fps;
 let friction = 0.05;
 //Firing Pin Variables
 let movementFP = 40;
-let movementFPpow = -45;
+let movementFPpow = -55;
 let pinX = 520;
 let pinY = 420;
 let pinWidth = 40;
@@ -68,7 +68,7 @@ let flipPressMovement = 95;
 document.addEventListener('keydown', (e) => {
   
   keyPresses[e.code] = true;
-  console.log(keyPresses);
+  // console.log(keyPresses);
   movementFlipper();
   movementFiringPinBack();
   // movementPinball();
@@ -79,42 +79,39 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
   // fired = false;
   keyPresses[e.code] = false;
-  console.log(keyPresses);
+  // console.log(keyPresses);
   movementFlipperDown();
   movementFiringPinRelease();
   // console.log(fpin);
 });
 
 function movementFiringPinBack() {
-  if (keyPresses.KeyF === true && firePin1.y < 465) {
-    firePin1.y +=movementFP;
-    console.log(firePin1.y);
-    console.log(pinball1.pos);
+  if (keyPresses.KeyF === true && firePin1.center.y < 510) {
+    firePin1.center.y +=movementFP;
+    // console.log(firePin1.center.y);
+    // console.log(pinball1.pos);
   } 
 }
 let resetFiringPin = () => {
-  firePin1.y = pinY;
-  // fpin.y = pinY;
-}
+  firePin1.center.y = 482.5;
+  }
 function movementFiringPinRelease() {
-  if (keyPresses.KeyF === false && firePin1.y > 410) {
-    console.log(`key is up`);
-    firePin1.y += movementFPpow;
-    // firePin1.update();
-    console.log(firePin1.y);
-    console.log(pinball1.pos)
-    // setTimeout(resetFiringPin, 1000);
+  if (keyPresses.KeyF === false && firePin1.center.y > 475) {
+    firePin1.center.y += movementFPpow;
+    
+    setTimeout(resetFiringPin, 1000);
+    keyPresses.KeyF = true;
   } 
 }
 let movementFlipper = () => {
   if(keyPresses.KeyZ === true && flipperA.degrees > -50){
     flipperA.degrees -= flipPressMovement
-    console.log(flipperA.degrees);
-    console.log(pinball1.pos);
+    // console.log(flipperA.degrees);
+    // console.log(pinball1.pos);
     }
   if(keyPresses.Slash === true && flipperB.degrees < 50){
     flipperB.degrees += flipPressMovement
-    console.log(flipperB.degrees);
+    // console.log(flipperB.degrees);
     }
   }
 
@@ -521,6 +518,7 @@ function gameLoop(timeStamp) {
   flipperB.drawFlipper();
 //firing pin
   firePin1.drawFiringPin();
+  // console.log(firePin1.center);
   //
   wallsArr.forEach((w) =>{
     if(coll_det_PbW(pinball1, w)){
@@ -564,23 +562,24 @@ function gameLoop(timeStamp) {
   let WallInitLaneAng = new Wall(570, 60, 490, 0);
   
   //new attempt moving the update out of the class and into game interveral
-  updatePb1 = (secondsPassed) =>{
-    pinball1.pos.x += pinball1.vx * secondsPassed;
-    pinball1.pos.y += pinball1.vx * secondsPassed;
+  // updatePb1 = (secondsPassed) =>{
+  //   pinball1.pos.x += pinball1.vx * secondsPassed;
+  //   pinball1.pos.y += pinball1.vx * secondsPassed;
 
-  }
-  updateFp1 = (secondsPassed) => {
-    firePin1.center.x += firePin1.vx * secondsPassed;
-    firePin1.center.y += firePin1.vy * secondsPassed;
-  }
-  updatePb1();
-  updatePb1();
+  // }
+  // updateFp1 = (secondsPassed) => {
+  //   firePin1.center.x += firePin1.vx * secondsPassed;
+  //   firePin1.center.y += firePin1.vy * secondsPassed;
+  // }
+  // updatePb1();
+  // updateFp1();
 
     
     requestAnimationFrame(gameLoop);
   }
   // }, 1000/5);
-  
+  // console.log(firePin1.center);
+
         
 /* Stretch Goals and Further implementation */
 //In order of importance and desire to get to post MVP
