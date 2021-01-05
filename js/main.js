@@ -26,6 +26,7 @@ let fps;
 let friction = 0.05;
 //pinball height pass - boolean for if pinball has been fired and passed the initial lane, draws a new wall to block pinball falling back in lane and allows gravity to be factored into the pinballs motion
 let pinballHeightPass = false;
+let turnOnGrav = false;
 //post gravity boolean - boolean that allows check for if gravity has been turned on and the wall drawn etc.
 let pinballPostGrav = false;
 //Firing Pin Variables
@@ -325,8 +326,9 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
 
   update = (secondsPassed) =>{
     //gravity!!!!
-    if (pinballHeightPass){
-    this.vy += gravity.y * secondsPassed;
+    if (turnOnGrav){
+      console.log(this.pos);
+      this.vy += 9.81 * secondsPassed;
     pinballPostGrav = true;
     }
 
@@ -424,7 +426,7 @@ function collision_response_fp(){
     let vecCollisionVel = vecCollisionNorm.mult(speed);
     console.log(vecCollisionVel);
     pinball1.vx -= vecCollisionVel.x;
-    pinball1.vy -= 2000;
+    pinball1.vy -= 20;
     // pinball1.vy += -150;
     // pinball1.center.subtr(vecCollisionVel);
     // firePin1.vx += vecCollisionVel.x;
@@ -507,10 +509,13 @@ function coll_res_PbW (b1, w1){
   // }
   pinball1.update(secondsPassed);
   firePin1.update(secondsPassed);
-  
-  if(pinball1.pos.y+pinball1.r <= 152 && !pinballHeightPass){
-    pinballHeightPass = true;
-    let wallLaneGate = new Wall(570, 175, game.clientWidth, 100);
+  // if (pinball1.pos.y - pinball1.r <= 0){
+  //   pinball1.vy = 0;
+  //   pinball1.pos.y = pinball1.r;
+  // }
+  if(pinball1.pos.y + pinball1.r <= 152 && !pinballHeightPass){
+    turnOnGrav = true;
+    let wallLaneGate = new Wall(550, 175, game.clientWidth, 100);
   }
 
   //calc frames per second
@@ -548,12 +553,16 @@ function coll_res_PbW (b1, w1){
       // pinball1.update();
       console.log(pinball1.pos);
     }
+    if (coll_det_PbW){
+      console.log(pinballHeightPass)
+      // console.log(pinball.pos.y+pinball.r);
+    }
     //wall iteration draw and coll detection and response
     wallsArr.forEach((w) =>{
       if(coll_det_PbW(pinball1, w)){
-        pen_res_PbW(pinball1, w);
-        coll_res_PbW(pinball1, w);
-        pinball1.reposition();
+        // pen_res_PbW(pinball1, w);
+        // coll_res_PbW(pinball1, w);
+        // pinball1.reposition();
       }
       })
   wallsArr.forEach((w)=>{
