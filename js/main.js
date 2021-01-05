@@ -24,6 +24,10 @@ console.log("canvas height " + game.clientHeight);
 let oldTimeStamp = 0;
 let fps;
 let friction = 0.05;
+//pinball height pass - boolean for if pinball has been fired and passed the initial lane, draws a new wall to block pinball falling back in lane and allows gravity to be factored into the pinballs motion
+let pinballHeightPass = false;
+//post gravity boolean - boolean that allows check for if gravity has been turned on and the wall drawn etc.
+let pinballPostGrav = false;
 //Firing Pin Variables
 let movementFP = 40;
 let movementFPpow = -60;
@@ -99,7 +103,7 @@ function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.center.y > 475) {
     firePin1.center.y += movementFPpow;
     // firePin1.vy += -300;
-    console.log(secondsPased);
+    // console.log(secondsPassed);
     console.log(firePin1.vy);
     
     setTimeout(resetFiringPin, 200);
@@ -179,6 +183,7 @@ class Vector {
   }
 }
 //gravity vector!
+const gravity = new Vector (0, 9.81);
 // const gravity = new Vector(0, 9.81);
 
 //Dead Space - use a rectangle for now, #### refactor into class for collision detection and game state boolean logic
@@ -279,8 +284,8 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
     this.vel = new Vector(this.vx, this.vy);
     this.acc = new Vector (0,0);
     this.speed = new Vector (0,0);
-    this.gravity = 0.05;
-    this.gravitySpeed = 0;
+    // this.gravity = 0.05;
+    // this.gravitySpeed = 0;
     this.acceleration = 1;
     this.edge = this.pos.x + this.r;
     pbsArr.push(this);
@@ -319,6 +324,13 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
   // }
 
   update = (secondsPassed) =>{
+    //gravity!!!!
+    if (pinballHeightPass){
+    this.vy += gravity.y * secondsPassed;
+    pinballPostGrav = true;
+    }
+
+    //movement based on velocity x y
     this.pos.x += this.vx * secondsPassed;
     this.pos.y += this.vy * secondsPassed;
   }
@@ -353,12 +365,6 @@ class Wall{
 
 /* Collision detection, Penetration Resolution, collision resolution / response */
 
-/* I think the following code is unnecessary and no longer implemented. #### delete
-// // let pball = {x: pinball1.x, y: pinball1.y, r: pinball1.r};
-// // let fpin = {x: firePin1.x, y: firePin1.y, w: firePin1.width, h: firePin1.height}
-// // console.log(pball, fpin);
-// // console.log(pinball1.x, firePin1.x)
-*/
 //Collision detection pinball and firing pin
 function pinballFirepinColliding(){
   let distx = Math.abs(pinball1.pos.x - firePin1.center.x);
@@ -501,7 +507,11 @@ function coll_res_PbW (b1, w1){
   // }
   pinball1.update(secondsPassed);
   firePin1.update(secondsPassed);
-
+  
+  if(pinball1.pos.y+pinball1.r <= 152 && !pinballHeightPass){
+    pinballHeightPass = true;
+    let wallLaneGate = new Wall(570, 175, game.clientWidth, 100);
+  }
 
   //calc frames per second
   fps = Math.round(1 / secondsPassed);
@@ -526,25 +536,26 @@ function coll_res_PbW (b1, w1){
   firePin1.drawFiringPin();
   // firePin1.update();
   // console.log(firePin1.center);
-  //
-  wallsArr.forEach((w) =>{
-    if(coll_det_PbW(pinball1, w)){
-      pen_res_PbW(pinball1, w);
-      coll_res_PbW(pinball1, w);
-      pinball1.reposition();
-    }
-    })
-    
+  
+  //conditional for firepin coll detection and response
   if(pinballFirepinColliding()){
     ctx.fillText("Collision", 200, 200);
     console.log('collision'); 
     pen_res_fp();
     // console.log(pinball1.vy);
     // if(!fireHappened){
-    collision_response_fp();
-    // pinball1.update();
-    console.log(pinball1.pos);
-  }
+      collision_response_fp();
+      // pinball1.update();
+      console.log(pinball1.pos);
+    }
+    //wall iteration draw and coll detection and response
+    wallsArr.forEach((w) =>{
+      if(coll_det_PbW(pinball1, w)){
+        pen_res_PbW(pinball1, w);
+        coll_res_PbW(pinball1, w);
+        pinball1.reposition();
+      }
+      })
   wallsArr.forEach((w)=>{
     w.drawWall();
   })
@@ -552,8 +563,8 @@ function coll_res_PbW (b1, w1){
   let edge2 = new Wall(game.clientWidth, 0, game.clientWidth, game.clientHeight);
   let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight);
   let edge4 = new Wall(0, game.clientHeight, 0, 0);
-  let WallInitLaneAng = new Wall(570, 60, 490, 0);
-  console.log(secondsPassed);
+  let wallInitLaneAng = new Wall(570, 60, 490, 0);
+  // console.log(secondsPassed);
   //new attempt moving the update out of the class and into game interveral
   // updatePb1 = (secondsPassed) =>{
     //   pinball1.pos.x += pinball1.vx * secondsPassed;
