@@ -27,7 +27,7 @@ let fps;
 let friction = 0.05;
 //Firing Pin Variables
 let movementFP = 40;
-let movementFPpow = -55;
+let movementFPpow = -60;
 let pinX = 520;
 let pinY = 420;
 let pinWidth = 40;
@@ -98,6 +98,9 @@ let resetFiringPin = () => {
 function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.center.y > 475) {
     firePin1.center.y += movementFPpow;
+    firePin1.vy += movementFPpow * secondsPassed;
+    console.log(secondsPased);
+    console.log(firePin1.vy);
     
     setTimeout(resetFiringPin, 1000);
     keyPresses.KeyF = true;
@@ -218,12 +221,12 @@ class firingPin {
   //   this.vel = this.vel.mult(1-friction);
   //   this.center = this.center.add(this.vel);
   // }
-  // update = (secondsPassed) =>{
-  //   this.center.x += this.vx * secondsPassed;
-  //   this.center.y += this.vy * secondsPassed;
-  // }
+  update = (secondsPassed) =>{
+    this.center.x += this.vx * secondsPassed;
+    this.center.y += this.vy * secondsPassed;
+  }
 }
-let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, 0);
+let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, -60);
 
 //Flippers
 //Start with rectangles? #### update these into sprites eventually? use the rectangle as hitbox
@@ -293,14 +296,14 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
     ctx.fill();
     ctx.closePath();
     }
-  // reposition = () =>{
-  //     // this.acc = this.acc.add(gravity);
-  //     // this.acc = this.acc.unit()
-  //     this.acc = this.acc.unit().mult(this.acceleration);
-  //     this.vel = this.vel.add(this.acc);
-  //     this.vel = this.vel.mult(1-friction);
-  //     this.pos = this.pos.add(this.vel);
-  //   }
+  reposition = () =>{
+      // this.acc = this.acc.add(gravity);
+      // this.acc = this.acc.unit()
+      this.acc = this.acc.unit().mult(this.acceleration);
+      this.vel = this.vel.add(this.acc);
+      this.vel = this.vel.mult(1-friction);
+      this.pos = this.pos.add(this.vel);
+    }
   hitsBottom = () =>{
     const bottomEdge = game.height - this.r;
     if (this.pos.y > bottomEdge){
@@ -315,11 +318,11 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
     
   // }
 
-  // update = (secondsPassed) =>{
-  //   this.pos.x += this.vx * secondsPassed;
-  //   this.pos.y += this.vx * secondsPassed;
+  update = (secondsPassed) =>{
+    this.pos.x += this.vx * secondsPassed;
+    this.pos.y += this.vx * secondsPassed;
 
-  // }
+  }
 }
 // //add an update function for pinball class that updates movement and collision vectors with new simpler physics
 // }
@@ -359,8 +362,8 @@ class Wall{
 */
 //Collision detection pinball and firing pin
 function pinballFirepinColliding(){
-  let distx = Math.abs(pinball1.pos.x - (firePin1.x+firePin1.width/2));
-  let disty = Math.abs(pinball1.pos.y - (firePin1.y+firePin1.height/2));
+  let distx = Math.abs(pinball1.pos.x - firePin1.center.x);
+  let disty = Math.abs(pinball1.pos.y - firePin1.center.y);
   //sides check
   if (distx > (firePin1.width/2 + pinball1.r)) { return false; }
   if (disty > (firePin1.height/2 + pinball1.r)) { return false; }
@@ -378,32 +381,32 @@ function pen_res_fp(){
   //refactor into different and simpler math?
   let dist = pinball1.pos.subtr(firePin1.center);
   let pen_depth = pinball1.r + firePin1.r - dist.mag();
-  console.log('firepin r' + firePin1.r)
-  console.log(pen_depth);
+  // console.log('firepin r' + firePin1.r)
+  // console.log(pen_depth);
   let pen_depth_div2 = pen_depth/2;
   let pen_res = dist.unit().mult(pen_depth_div2);
   // console.log(Object.keys(pen_res));
-  console.log(pen_res.x, pen_res.y);
-  // console.log('pen res ' + pen_res);
-  console.log(pen_res);
-  console.log(pinball1.pos);
-  pinball1.pos = pinball1.pos.subtr(pen_res);
-  console.log(pinball1.pos);
+  // // console.log(pen_res.x, pen_res.y);
+  // // console.log('pen res ' + pen_res);
+  // console.log(pen_res);
+  // console.log(pinball1.pos);
+  pinball1.pos = pinball1.pos.add(pen_res);
+  // console.log(pinball1.pos);
   
 };
 
 // collision resolution between pinball and firing pin
 let collhappened = false;
 let fireHappened = false;
-function collision_response_fp(pinBall, firingPin){
+function collision_response_fp(){
   //fake / cheater method for vector change, create a new solution for this using the new update methods for the pinball class 
   
   //collision vector of impact firing pin and pinball
   let vecCollision = new Vector (pinball1.pos.x-firePin1.center.x, pinball1.pos.y-firePin1.center.y);
-  console.log(vecCollision);
+  // console.log(vecCollision);
   //distance of collision vector (magnitude):
   let distance = vecCollision.mag();
-  console.log('distance of col vec ' + distance);
+  // console.log('distance of col vec ' + distance);
   //normalized collision vector or unit vector(collsion vector with mag 1)
   let vecCollisionNorm = vecCollision.unit();
   let vRelativeVelocity = pinball1.vel.subtr(firePin1.vel);
@@ -412,14 +415,16 @@ function collision_response_fp(pinBall, firingPin){
   //   break;
   // } 
     //collision velocity
-    console.log(speed);
+    // console.log(speed);
     let vecCollisionVel = vecCollisionNorm.mult(speed);
     console.log(vecCollisionVel);
-    pinball1.vx -= vecCollisionVel.x;
-    pinball1.vy -= vecCollisionVel.y;
-    firePin1.vx += vecCollisionVel.x;
-    firePin1.vy += vecCollisionVel.y;
-    console.log(pinball1.vy);
+    pinball1.vx -= vecCollisionVel.x*100;
+    // pinball1.vy -= vecCollisionVel.y * 10000;
+    pinball1.vy += -150;
+    // pinball1.center.subtr(vecCollisionVel);
+    // firePin1.vx += vecCollisionVel.x;
+    // firePin1.vy += vecCollisionVel.y;
+    // console.log(pinball1.vy);
 //now i need to update the movement of the firing pin on release to be part of the update
   //boolean to prevent continual collision response for the pinball after the firing has fired
   collhappened = true;
@@ -465,7 +470,7 @@ function coll_res_PbW (b1, w1){
   let new_sepVel = -sepVel * b1.elasticity;
   let vsep_diff = sepVel - new_sepVel;
   b1.vel = b1.vel.add(normal.mult(-vsep_diff));
-  console.log("add pb vel " + normal.mult(-vsep_diff));
+  // console.log("add pb vel " + normal.mult(-vsep_diff));
   // b1.reposition;
 }
 //collision detection pinball and flippers
@@ -485,12 +490,11 @@ function coll_res_PbW (b1, w1){
 // main game loop canvas loop and redraw
 // setInterval(function(){
 
-requestAnimationFrame(gameLoop);
-
-function gameLoop(timeStamp) {
+  
+  function gameLoop(timeStamp) {
 
   //calc for seconds 
-  secondsPassed = Math.min(secondsPassed, 0.1);
+  // secondsPassed = Math.min(secondsPassed, 0.1);
   secondsPassed = (timeStamp-oldTimeStamp)/1000;
   oldTimeStamp = timeStamp;
   // if (pinball1.pos.y + pinball1.r < 0){
@@ -511,6 +515,7 @@ function gameLoop(timeStamp) {
   ctx.closePath();
   //pinball
   pinball1.drawPinball();
+  //pinball1.update();
   // console.log(pinball1.y);
   //left flipper
   flipperA.drawFlipper();
@@ -518,6 +523,7 @@ function gameLoop(timeStamp) {
   flipperB.drawFlipper();
 //firing pin
   firePin1.drawFiringPin();
+  // firePin1.update();
   // console.log(firePin1.center);
   //
   wallsArr.forEach((w) =>{
@@ -527,31 +533,17 @@ function gameLoop(timeStamp) {
       pinball1.reposition();
     }
     })
-  
+    
   if(pinballFirepinColliding()){
     ctx.fillText("Collision", 200, 200);
     console.log('collision'); 
     // pen_res_fp();
-    console.log(pinball1.vy);
-    if(!fireHappened){
+    // console.log(pinball1.vy);
+    // if(!fireHappened){
     collision_response_fp();
-    // if (pinball1.pos.y + pinball1.r < 0){
-    //   pinball1.pos.y = pinball1.r;
-    // }
-    console.log(pinball1.vy);
-    }
-    // firePin1.reposition();
     // pinball1.update();
-    console.log(pinball1.vy);
-    
-    // pinballGrav();
-    // pinball1.reposition();
+    console.log(pinball1.pos);
   }
-  // if(collhappened){
-  //   // pinball1.hitsBottom();
-  //   // pinball1.hitsTop();
-  //   pinball1.newPos();
-  // }
   wallsArr.forEach((w)=>{
     w.drawWall();
   })
@@ -563,24 +555,25 @@ function gameLoop(timeStamp) {
   
   //new attempt moving the update out of the class and into game interveral
   // updatePb1 = (secondsPassed) =>{
-  //   pinball1.pos.x += pinball1.vx * secondsPassed;
-  //   pinball1.pos.y += pinball1.vx * secondsPassed;
-
-  // }
+    //   pinball1.pos.x += pinball1.vx * secondsPassed;
+    //   pinball1.pos.y += pinball1.vx * secondsPassed;
+    
+    // }
   // updateFp1 = (secondsPassed) => {
-  //   firePin1.center.x += firePin1.vx * secondsPassed;
+    //   firePin1.center.x += firePin1.vx * secondsPassed;
   //   firePin1.center.y += firePin1.vy * secondsPassed;
   // }
   // updatePb1();
   // updateFp1();
+  
+  
+  requestAnimationFrame(gameLoop);
+}
+// }, 1000/5);
+console.log(pinball1.pos);
 
-    
-    requestAnimationFrame(gameLoop);
-  }
-  // }, 1000/5);
-  // console.log(firePin1.center);
+requestAnimationFrame(gameLoop);
 
-        
 /* Stretch Goals and Further implementation */
 //In order of importance and desire to get to post MVP
 // Create a scoring system and bonus conditions
