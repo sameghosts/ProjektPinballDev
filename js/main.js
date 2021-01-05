@@ -21,7 +21,6 @@ console.log("canvas height " + game.clientHeight);
 
 /* Variables */
 //Game loop and time stamp (seconda passed, timestamp, frames per second)
-let secondsPassed = 0;
 let oldTimeStamp = 0;
 let fps;
 let friction = 0.05;
@@ -93,16 +92,17 @@ function movementFiringPinBack() {
   } 
 }
 let resetFiringPin = () => {
+  firePin1.vy =0;
   firePin1.center.y = 482.5;
   }
 function movementFiringPinRelease() {
   if (keyPresses.KeyF === false && firePin1.center.y > 475) {
     firePin1.center.y += movementFPpow;
-    firePin1.vy += movementFPpow * secondsPassed;
+    // firePin1.vy += -300;
     console.log(secondsPased);
     console.log(firePin1.vy);
     
-    setTimeout(resetFiringPin, 1000);
+    setTimeout(resetFiringPin, 200);
     keyPresses.KeyF = true;
   } 
 }
@@ -226,7 +226,7 @@ class firingPin {
     this.center.y += this.vy * secondsPassed;
   }
 }
-let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, -60);
+let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, 0);
 
 //Flippers
 //Start with rectangles? #### update these into sprites eventually? use the rectangle as hitbox
@@ -320,13 +320,12 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
 
   update = (secondsPassed) =>{
     this.pos.x += this.vx * secondsPassed;
-    this.pos.y += this.vx * secondsPassed;
-
+    this.pos.y += this.vy * secondsPassed;
   }
 }
 // //add an update function for pinball class that updates movement and collision vectors with new simpler physics
 // }
-let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass, 0, 0);
+let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass, 0, -200);
 
 //#### should I push all game objects into a object array in order to more easily manage collision detection or is that unnecessary and counter-intuitive
 
@@ -418,9 +417,9 @@ function collision_response_fp(){
     // console.log(speed);
     let vecCollisionVel = vecCollisionNorm.mult(speed);
     console.log(vecCollisionVel);
-    pinball1.vx -= vecCollisionVel.x*100;
-    // pinball1.vy -= vecCollisionVel.y * 10000;
-    pinball1.vy += -150;
+    pinball1.vx -= vecCollisionVel.x;
+    pinball1.vy -= 200;
+    // pinball1.vy += -150;
     // pinball1.center.subtr(vecCollisionVel);
     // firePin1.vx += vecCollisionVel.x;
     // firePin1.vy += vecCollisionVel.y;
@@ -495,11 +494,13 @@ function coll_res_PbW (b1, w1){
 
   //calc for seconds 
   // secondsPassed = Math.min(secondsPassed, 0.1);
-  secondsPassed = (timeStamp-oldTimeStamp)/1000;
+ let secondsPassed = (timeStamp-oldTimeStamp)/1000;
   oldTimeStamp = timeStamp;
   // if (pinball1.pos.y + pinball1.r < 0){
   //   pinball1.pos.y = pinball1.r;
   // }
+  pinball1.update(secondsPassed);
+  firePin1.update(secondsPassed);
 
 
   //calc frames per second
@@ -537,7 +538,7 @@ function coll_res_PbW (b1, w1){
   if(pinballFirepinColliding()){
     ctx.fillText("Collision", 200, 200);
     console.log('collision'); 
-    // pen_res_fp();
+    pen_res_fp();
     // console.log(pinball1.vy);
     // if(!fireHappened){
     collision_response_fp();
@@ -552,7 +553,7 @@ function coll_res_PbW (b1, w1){
   let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight);
   let edge4 = new Wall(0, game.clientHeight, 0, 0);
   let WallInitLaneAng = new Wall(570, 60, 490, 0);
-  
+  console.log(secondsPassed);
   //new attempt moving the update out of the class and into game interveral
   // updatePb1 = (secondsPassed) =>{
     //   pinball1.pos.x += pinball1.vx * secondsPassed;
