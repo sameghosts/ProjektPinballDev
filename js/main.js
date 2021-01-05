@@ -325,7 +325,7 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
 }
 // //add an update function for pinball class that updates movement and collision vectors with new simpler physics
 // }
-let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass, 0, -200);
+let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass, 0, 0);
 
 //#### should I push all game objects into a object array in order to more easily manage collision detection or is that unnecessary and counter-intuitive
 
@@ -418,7 +418,7 @@ function collision_response_fp(){
     let vecCollisionVel = vecCollisionNorm.mult(speed);
     console.log(vecCollisionVel);
     pinball1.vx -= vecCollisionVel.x;
-    pinball1.vy -= 200;
+    pinball1.vy -= 2000;
     // pinball1.vy += -150;
     // pinball1.center.subtr(vecCollisionVel);
     // firePin1.vx += vecCollisionVel.x;
