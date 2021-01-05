@@ -515,7 +515,7 @@ function coll_res_PbW (b1, w1){
   // }
   if(pinball1.pos.y + pinball1.r <= 152 && !pinballHeightPass){
     turnOnGrav = true;
-    let wallLaneGate = new Wall(550, 175, game.clientWidth, 100);
+    let wallLaneGate = new Wall(500, 175, game.clientWidth, 100);
   }
 
   //calc frames per second
