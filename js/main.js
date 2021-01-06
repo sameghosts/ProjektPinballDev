@@ -477,7 +477,7 @@ const restitution = 0.9;
 // const eWalls = 5;
 function coll_res_PbW (b1, w1){
   let closestPoint = closestPointPbW(b1,w1);
-  console.log(closestPoint);
+  // console.log(closestPoint);
   let ballToClosest2 = closestPointPbW(b1, w1).subtr(b1.pos);
   if(b1.pos.x > closestPoint.x){
     b1.vx = (Math.abs(b1.vx) + w1.ex) * restitution;
@@ -602,19 +602,6 @@ function coll_res_PbW (b1, w1){
   let edge4 = new Wall(0, game.clientHeight, 0, 0, 5, 2);
   // late gate›
   let wallInitLaneAng = new Wall(570, 60, 490, 0, 10, 5);
-  // console.log(secondsPassed);
-  //new attempt moving the update out of the class and into game interveral
-  // updatePb1 = (secondsPassed) =>{
-    //   pinball1.pos.x += pinball1.vx * secondsPassed;
-    //   pinball1.pos.y += pinball1.vx * secondsPassed;
-    
-    // }
-  // updateFp1 = (secondsPassed) => {
-    //   firePin1.center.x += firePin1.vx * secondsPassed;
-  //   firePin1.center.y += firePin1.vy * secondsPassed;
-  // }
-  // updatePb1();
-  // updateFp1();
   
   
   requestAnimationFrame(gameLoop);
