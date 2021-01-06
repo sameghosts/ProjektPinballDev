@@ -260,6 +260,8 @@ constructor(x, y, width, height, degrees, color, flipRX, flipRY){
   this.width = width
   this.height = height
   this.degrees = degrees
+  //scalar angular value you can use to change rate of rotation over time ___ vector or 
+  this.degAngudelta = new vector (0,0);
   this.color = color
   this.flipRX = flipRX
   this.flipRY = flipRY
