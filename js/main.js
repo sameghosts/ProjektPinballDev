@@ -188,9 +188,26 @@ const gravity = new Vector (0, 9.81);
 // const gravity = new Vector(0, 9.81);
 
 //Dead Space - use a rectangle for now, #### refactor into class for collision detection and game state boolean logic
-ctx.fillStyle = 'darkgreen';
-ctx.fillRect(0, 500, 500, 112);
-ctx.closePath();
+class deadSpace {
+  constructor (x, y, width, height, color){
+    this.x = x
+    this.y = y
+    this.width = width
+    this.height = height
+    this.color = color
+    this.center = new Vector(this.x + this.width/2, this.y + this.height/2);
+  }
+  drawDS = () => {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.closePath();
+    
+  }
+}
+// ctx.fillRect(0, 500, 500, 112);
+let colorGP = 'darkgreen';
+let colorGO = 'red';
+let daGutter = new deadSpace (0, 500, 500, 112, colorGP);
 
 //Initial lane - #### eventually refactor into a class for detection, perhaps a lane class that can be pushed to array
 ctx.fillStyle = 'brown';
@@ -501,9 +518,30 @@ function coll_res_PbW (b1, w1){
 //collision resolution betweeen pinball and flippers
 
 //collision detection pinball and dead space
-//pen resolution between pinball and dead space
-//collision resolution between pinball and dead space 
+function coll_det_PbDS() {
+  let distx = Math.abs(pinball1.pos.x - daGutter.center.x);
+  let disty = Math.abs(pinball1.pos.y - daGutter.center.y);
+  //sides check
+  if (distx > (daGutter.width/2 + pinball1.r)) { return false; }
+  if (disty > (daGutter.height/2 + pinball1.r)) { return false; }
 
+  if (distx <= (daGutter.width/2)) { return true; } 
+  if (disty <= (daGutter.height/2)) { return true; }
+  
+  //pythag theorem for corner
+  let dx=distx-daGutter.width/2;
+  let dy=disty-daGutter.height/2;
+  return (dx**2+dy**2<=(pinball1.r**2));
+}
+//collision resolution between pinball and dead space 
+  //change color of dead space
+  //change game logic of game 
+function coll_res_deadSpace(){
+  daGutter.color = colorGO;
+  ctx.fillStyle = 'chartreuse'
+  ctx.font = '40px serif'
+  ctx.fillText("YOU LOSE, ROUND OVER", 185, 255)
+}
 /*Game Mechanics */
 //Lives feature and reset
 //function end game loop
@@ -553,17 +591,16 @@ function coll_res_PbW (b1, w1){
   ctx.closePath();
   //pinball
   pinball1.drawPinball();
-  //pinball1.update();
-  // console.log(pinball1.y);
   //left flipper
   flipperA.drawFlipper();
   //right flipper
   flipperB.drawFlipper();
 //firing pin
   firePin1.drawFiringPin();
-  // firePin1.update();
-  // console.log(firePin1.center);
-  
+  //the dead space
+  daGutter.drawDS();
+
+
   //conditional for firepin coll detection and response
   if(pinballFirepinColliding()){
     ctx.fillText("Collision", 200, 200);
@@ -603,6 +640,11 @@ function coll_res_PbW (b1, w1){
   // late gate›
   let wallInitLaneAng = new Wall(570, 60, 490, 0, 10, 5);
   
+  //col detec and resolution for deadspace and pinball
+  if(coll_det_PbDS()){
+    coll_res_deadSpace();
+    //check for lives and resetGame()
+  }
   
   requestAnimationFrame(gameLoop);
 }
