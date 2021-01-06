@@ -474,7 +474,7 @@ const restitution = 0.9;
 function coll_res_PbW (b1, w1){
   let closestPoint = closestPointPbW(b1,w1);
   console.log(closestPoint);
-  let ballToClosest = closestPointPbW(b1, w1).subtr(b1.pos);
+  let ballToClosest2 = closestPointPbW(b1, w1).subtr(b1.pos);
   if(b1.pos.x > closestPoint.x){
     b1.vx = Math.abs(b1.vx) * restitution;
     b1.pos.x = closestPoint.x + b1.r;
@@ -492,7 +492,7 @@ function coll_res_PbW (b1, w1){
   }
   }
 
-  console.log(ballToClosest);
+  // console.log(ballToClosest);
   //come back to this mathematics after you have refactored pinball physics and update ##### 
   // let normal = b1.pos.subtr(closestPointPbW(b1,w1)).unit();
   // let sepVel = Vector.dot(b1.vel, normal);
@@ -541,11 +541,12 @@ function coll_res_PbW (b1, w1){
     turnOnGrav = true;
     let wallLaneGate = new Wall(500, 175, game.clientWidth, 100);
   }
-  if(pinball1.pos.y - pinball1.r <= 0){
-    pinball1.pos.y=pinball1.r;
-    pinball1.vy = 1;
-    pinball1.vx = -10;
-  }
+  //ceiling failsafe
+  // if(pinball1.pos.y - pinball1.r <= 0){
+  //   pinball1.pos.y=pinball1.r;
+  //   pinball1.vy = 1;
+  //   pinball1.vx = -10;
+  // }
 
   //calc frames per second
   fps = Math.round(1 / secondsPassed);
