@@ -484,14 +484,14 @@ function coll_res_PbW (b1, w1){
   }
 
   if(b1.pos.y < closestPoint.y){
+    b1.vy = -Math.abs(b1.vy) * restitution;
+    b1.pos.y = closestPoint.y - b1.r;
+  } else if (b1.pos.y > closestPoint.y){
     b1.vy = Math.abs(b1.vy) * restitution;
     b1.pos.y = closestPoint.y + b1.r;
-  } else if (b1.pos.y > closestPoint.y){
-    b1.vy = -Math.abs(b1.vy) * restitution;
-    b1.pos.y = closestPoint.y + b1.r
   }
   }
-
+  //OLD COL RES
   // console.log(ballToClosest);
   //come back to this mathematics after you have refactored pinball physics and update ##### 
   // let normal = b1.pos.subtr(closestPointPbW(b1,w1)).unit();
@@ -503,7 +503,7 @@ function coll_res_PbW (b1, w1){
   // b1.reposition;
 
 
-}
+
 //collision detection pinball and flippers
 //pen resolution between pinball and flippers
 //collision resolution betweeen pinball and flippers
