@@ -471,7 +471,7 @@ function pen_res_PbW (b1, w1){
 }
 //collision resolution algorithm between pinball and walls with restitution slight decrease in energy
 const restitution = 0.9;
-const eWalls = 0.3
+const eWalls = 5;
 function coll_res_PbW (b1, w1){
   let closestPoint = closestPointPbW(b1,w1);
   console.log(closestPoint);
