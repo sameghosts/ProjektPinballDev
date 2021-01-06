@@ -538,9 +538,9 @@ function coll_det_PbDS() {
   //change game logic of game 
 function coll_res_deadSpace(){
   daGutter.color = colorGO;
-  ctx.fillStyle = 'chartreuse'
-  ctx.font = '40px serif'
-  ctx.fillText("YOU LOSE, ROUND OVER", 185, 255)
+  ctx.fillStyle = 'red'
+  ctx.font = '60px serif'
+  ctx.fillText("ROUND OVER", 100, 255);
 }
 /*Game Mechanics */
 //Lives feature and reset
@@ -585,10 +585,12 @@ function coll_res_deadSpace(){
   //Initial lane
   ctx.fillStyle = 'brown';
   ctx.fillRect(500, 175, 15, 435);
-  //deadspace
-  ctx.fillStyle = 'darkgreen';
-  ctx.fillRect(0, 500, 500, 112);
-  ctx.closePath();
+  // //deadspace
+  // ctx.fillStyle = 'darkgreen';
+  // ctx.fillRect(0, 500, 500, 112);
+  // ctx.closePath();
+  //the dead space
+  daGutter.drawDS();
   //pinball
   pinball1.drawPinball();
   //left flipper
@@ -597,8 +599,6 @@ function coll_res_deadSpace(){
   flipperB.drawFlipper();
 //firing pin
   firePin1.drawFiringPin();
-  //the dead space
-  daGutter.drawDS();
 
 
   //conditional for firepin coll detection and response
@@ -639,6 +639,22 @@ function coll_res_deadSpace(){
   let edge4 = new Wall(0, game.clientHeight, 0, 0, 5, 2);
   // late gate›
   let wallInitLaneAng = new Wall(570, 60, 490, 0, 10, 5);
+  //lane right wall
+  let wallLaneRight = new Wall (499, 175, 499, 610, 5, 5);
+  
+  //fliper lanes 4 lines or 8 lines that establish lanes that guide the pinball perhaps another constructor and array with different collision detection? for now keep as is. 
+  //draw little squares as score / multiplier collision detection checks that are in the lane 
+    //pinball radius is 15
+    //until its own class and array is built use high y values in order to send the pinball down lol, might have to add another this value in the wall class and refactor collision response equations so there is a value that can be negative or positive 1 so i can force and negative .vy value for the pinball for these lanes.
+  //most left
+  let flipperLane1;
+  //left-right
+  let flipperLane2;
+  //right-left
+  let flipperLane3;
+  //most right
+  let flipperLane4;
+
   
   //col detec and resolution for deadspace and pinball
   if(coll_det_PbDS()){
