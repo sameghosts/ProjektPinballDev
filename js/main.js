@@ -495,18 +495,6 @@ function coll_res_PbW (b1, w1){
     b1.pos.y = closestPoint.y + b1.r;
   }
   }
-  //OLD COL RES
-  // console.log(ballToClosest);
-  //come back to this mathematics after you have refactored pinball physics and update ##### 
-  // let normal = b1.pos.subtr(closestPointPbW(b1,w1)).unit();
-  // let sepVel = Vector.dot(b1.vel, normal);
-  // let new_sepVel = -sepVel * b1.elasticity;
-  // let vsep_diff = sepVel - new_sepVel;
-  // b1.vel = b1.vel.add(normal.mult(-vsep_diff));
-  // console.log("add pb vel " + normal.mult(-vsep_diff));
-  // b1.reposition;
-
-
 
 //collision detection pinball and flippers
 //pen resolution between pinball and flippers
@@ -605,13 +593,13 @@ function coll_res_PbW (b1, w1){
     w.drawWall();
   })
   //top canvas
-  let edge1 = new Wall(0, 0, game.clientWidth, 0, 5, 10);
+  let edge1 = new Wall(0, 0, game.clientWidth, 0, 2, 5);
   //right wall canvas
-  let edge2 = new Wall(game.clientWidth, 0, game.clientWidth, game.clientHeight, 10, 5);
+  let edge2 = new Wall(game.clientWidth, 0, game.clientWidth, game.clientHeight, 5, 2);
   //bottom canvas
-  let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight, 5, 10);
+  let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight, 2, 5);
   //left wall canvas
-  let edge4 = new Wall(0, game.clientHeight, 0, 0, 10, 5);
+  let edge4 = new Wall(0, game.clientHeight, 0, 0, 5, 2);
   // late gate›
   let wallInitLaneAng = new Wall(570, 60, 490, 0, 10, 5);
   // console.log(secondsPassed);
