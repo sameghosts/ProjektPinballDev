@@ -346,9 +346,12 @@ let pinball1 = new pinBall (ballX, ballY, radius, ballColor, pbmass, 0, 0);
 //wall class, segment btwn two different points
 // i hope the push method for this works and that the physics response works #### figure out new collision physics for pinball and walls
 class Wall{
-  constructor (x1, y1, x2, y2){
+  constructor (x1, y1, x2, y2, ex, ey){
     this.start = new Vector(x1, y1);
     this.end = new Vector(x2, y2);
+    //wall elasticity bounciness values remember to add to each wall instantiation!
+    this.ex = ex;
+    this.ey = ey;
     wallsArr.push(this);
   }
   drawWall(){
@@ -426,7 +429,7 @@ function collision_response_fp(){
     let vecCollisionVel = vecCollisionNorm.mult(speed);
     console.log(vecCollisionVel);
     pinball1.vx -= vecCollisionVel.x;
-    pinball1.vy -= 20;
+    pinball1.vy -= 100;
     // pinball1.vy += -150;
     // pinball1.center.subtr(vecCollisionVel);
     // firePin1.vx += vecCollisionVel.x;
@@ -471,24 +474,24 @@ function pen_res_PbW (b1, w1){
 }
 //collision resolution algorithm between pinball and walls with restitution slight decrease in energy
 const restitution = 0.9;
-const eWalls = 5;
+// const eWalls = 5;
 function coll_res_PbW (b1, w1){
   let closestPoint = closestPointPbW(b1,w1);
   console.log(closestPoint);
   let ballToClosest2 = closestPointPbW(b1, w1).subtr(b1.pos);
   if(b1.pos.x > closestPoint.x){
-    b1.vx = (Math.abs(b1.vx) + eWalls) * restitution;
+    b1.vx = (Math.abs(b1.vx) + w1.ex) * restitution;
     b1.pos.x = closestPoint.x + b1.r;
   } else if (b1.pos.x < closestPoint.x){
-    b1.vx= -(Math.abs(b1.vx) + eWalls) * restitution;
+    b1.vx= -(Math.abs(b1.vx) + w1.ex) * restitution;
     b1.pos.x = closestPoint.x -b1.r;
   }
 
   if(b1.pos.y < closestPoint.y){
-    b1.vy = -(Math.abs(b1.vy) + eWalls) * restitution;
+    b1.vy = -(Math.abs(b1.vy) + w1.ey) * restitution;
     b1.pos.y = closestPoint.y - b1.r;
   } else if (b1.pos.y > closestPoint.y){
-    b1.vy = (Math.abs(b1.vy) + eWalls) * restitution;
+    b1.vy = (Math.abs(b1.vy) + w1.ey) * restitution;
     b1.pos.y = closestPoint.y + b1.r;
   }
   }
@@ -540,7 +543,7 @@ function coll_res_PbW (b1, w1){
   // }
   if(pinball1.pos.y + pinball1.r <= 120 && !pinballHeightPass){
     turnOnGrav = true;
-    let wallLaneGate = new Wall(500, 175, game.clientWidth, 100);
+    let wallLaneGate = new Wall(500, 175, game.clientWidth, 100, 10, 5);
   }
   //ceiling failsafe
   // if(pinball1.pos.y - pinball1.r <= 0){
@@ -601,11 +604,16 @@ function coll_res_PbW (b1, w1){
   wallsArr.forEach((w)=>{
     w.drawWall();
   })
-  let edge1 = new Wall(0, 0, game.clientWidth, 0);
-  let edge2 = new Wall(game.clientWidth, 0, game.clientWidth, game.clientHeight);
-  let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight);
-  let edge4 = new Wall(0, game.clientHeight, 0, 0);
-  let wallInitLaneAng = new Wall(570, 60, 490, 0);
+  //top canvas
+  let edge1 = new Wall(0, 0, game.clientWidth, 0, 5, 10);
+  //right wall canvas
+  let edge2 = new Wall(game.clientWidth, 0, game.clientWidth, game.clientHeight, 10, 5);
+  //bottom canvas
+  let edge3 = new Wall(game.clientWidth, game.clientHeight, 0, game.clientHeight, 5, 10);
+  //left wall canvas
+  let edge4 = new Wall(0, game.clientHeight, 0, 0, 10, 5);
+  // late gate›
+  let wallInitLaneAng = new Wall(570, 60, 490, 0, 10, 5);
   // console.log(secondsPassed);
   //new attempt moving the update out of the class and into game interveral
   // updatePb1 = (secondsPassed) =>{
