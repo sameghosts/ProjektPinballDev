@@ -51,6 +51,7 @@ const flipWidth = 135;
 const flipHeight = 20;
 let flipInitAng = 45;
 const flipColor = 'red';
+let FlArr = [];
 
 //Pinball variables
 let ballX = 540;
@@ -116,19 +117,23 @@ let movementFlipper = () => {
     flipperA.degrees -= flipPressMovement
     // console.log(flipperA.degrees);
     // console.log(pinball1.pos);
+    console.log(flipperA.center)
     }
   if(keyPresses.Slash === true && flipperB.degrees < 50){
     flipperB.degrees += flipPressMovement
     // console.log(flipperB.degrees);
+    console.log(flipperB.center)
     }
   }
 
 let movementFlipperDown = () => {
   if(keyPresses.KeyZ === false){
     flipperA.degrees = flipInitAng
+    console.log(flipperA.center)
   }
   if(keyPresses.Slash === false){
     flipperB.degrees = -flipInitAng
+    console.log(flipperB.center)
   }
 }
 
@@ -260,11 +265,15 @@ constructor(x, y, width, height, degrees, color, flipRX, flipRY){
   this.width = width
   this.height = height
   this.degrees = degrees
-  //scalar angular value you can use to change rate of rotation over time ___ vector or 
+  this.center = new Vector(this.x+this.width/2, this.y+this.height/2)
+  //scalar angular value you can use to change rate of rotation over time ___ vector or
+  this.dAX = 0;
+  this.dYX = 0;
   this.degAngudelta = new Vector (0,0);
   this.color = color
   this.flipRX = flipRX
   this.flipRY = flipRY
+  FlArr.push(this)  
 }
   drawFlipper = (x, y, width, height, degrees, color, flipRX, flipRY) => {
     ctx.save();
@@ -283,6 +292,8 @@ constructor(x, y, width, height, degrees, color, flipRX, flipRY){
 let flipperA = new flipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAng, flipColor, flipAXR, flipAYR);
 
 let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
+
+
 
 // Pinball
   class pinBall {
@@ -516,8 +527,48 @@ function coll_res_PbW (b1, w1){
   }
 
 //collision detection pinball and flippers
+function pinballFlippersColliding(){
+  FlArr.forEach(flipper => {
+
+    let distx = Math.abs(pinball1.pos.x - flipper.center.x);
+    let disty = Math.abs(pinball1.pos.y - flipper.center.y);
+    //sides check
+    if (distx > (flipper.width/2 + pinball1.r)) { return false; }
+    if (disty > (flipper.height/2 + pinball1.r)) { return false; }
+  
+    if (distx <= (flipper.width/2)) { return true; } 
+    if (disty <= (flipper.height/2)) { return true; }
+    //pythag theorem for corner
+    let dx=distx-flipper.width/2;
+    let dy=disty-flipper.height/2;
+    return (dx**2+dy**2<=(pinball1.r**2));
+  })
+}
+
 //pen resolution between pinball and flippers
 //collision resolution betweeen pinball and flippers
+function coll_res_FlPb(){
+     
+    //collision vector of impact flipper and pinball
+    let vecCollision = new Vector (pinball1.pos.x-flipper.center.x, pinball1.pos.y-flipper.center.y);
+    // console.log(vecCollision);
+    //distance of collision vector (magnitude):
+    let distance = vecCollision.mag();
+    // console.log('distance of col vec ' + distance);
+    //normalized collision vector or unit vector(collsion vector with mag 1)
+    let vecCollisionNorm = vecCollision.unit();
+    let vRelativeVelocity = pinball1.vel.subtr(firePin1.vel);
+    let speed = vRelativeVelocity.x * vecCollisionNorm.x + vRelativeVelocity.y * vecCollisionNorm.y;
+    // if (speed<0) {
+    //   break;
+    // } 
+      //collision velocity
+      // console.log(speed);
+      let vecCollisionVel = vecCollisionNorm.mult(speed);
+      console.log(vecCollisionVel);
+      pinball1.vx -= vecCollisionVel.x;
+      pinball1.vy -= 100;
+}
 
 //collision detection pinball and dead space
 function coll_det_PbDS() {
