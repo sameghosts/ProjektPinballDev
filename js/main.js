@@ -1,4 +1,5 @@
 // Pinball project breakdown and psuedo code
+
 //Establish DOM reverences
 let game = document.getElementById('game')
 let leftScreen = document.getElementById('leftScreen')
@@ -39,20 +40,20 @@ let pinWidth = 40;
 let pinHeight = 125;
 let pinColor = 'orange';
 
-//Flipper variables
-const flipAX = 125;
-const flipAY = 375;
-const flipAXR = flipAX;
-const flipAYR = flipAY +10;
-const flipBX = 245;
-const flipBY = 375;
-const flipBXR = flipBX + 135;
-const flipBYR = flipBY + 10;
-const flipWidth = 135;
-const flipHeight = 20;
-let flipInitAng = 45;
-const flipColor = 'red';
-let FlArr = [];
+// //Flipper variables
+// const flipAX = 125;
+// const flipAY = 375;
+// const flipAXR = flipAX;
+// const flipAYR = flipAY +10;
+// const flipBX = 245;
+// const flipBY = 375;
+// const flipBXR = flipBX + 135;
+// const flipBYR = flipBY + 10;
+// const flipWidth = 135;
+// const flipHeight = 20;
+// let flipInitAng = 45;
+// const flipColor = 'red';
+// let FlArr = [];
 
 //Pinball variables
 let ballX = 540;
@@ -75,7 +76,7 @@ document.addEventListener('keydown', (e) => {
   
   keyPresses[e.code] = true;
   // console.log(keyPresses);
-  movementFlipper();
+  // movementFlipper();
   movementFiringPinBack();
   // movementPinball();
   // movementPinball();
@@ -86,7 +87,7 @@ document.addEventListener('keyup', (e) => {
   // fired = false;
   keyPresses[e.code] = false;
   // console.log(keyPresses);
-  movementFlipperDown();
+  // movementFlipperDown();
   movementFiringPinRelease();
   // console.log(fpin);
 });
@@ -113,6 +114,8 @@ function movementFiringPinRelease() {
     keyPresses.KeyF = true;
   } 
 }
+/* FIX THE FLIPPER### MOVEMENT_Handler ###$$$*/
+//mvmt handlers for the flippers
 let movementFlipper = () => {
   if(keyPresses.KeyZ === true && flipperA.degrees > -50){
     flipperA.degrees -= flipPressMovement
@@ -138,11 +141,6 @@ let movementFlipperDown = () => {
   }
 }
 
-// function movementPinball(e) {
-//   if (e.key === 'w') {
-//     pinball1.y += 10;
-//   }
-// }
 
 /* Classes and constructors AlPHABETIZED*/
 //Vector Class for collision detection
@@ -612,15 +610,10 @@ function coll_res_deadSpace(){
   // secondsPassed = Math.min(secondsPassed, 0.1);
  let secondsPassed = (timeStamp-oldTimeStamp)/1000;
   oldTimeStamp = timeStamp;
-  // if (pinball1.pos.y + pinball1.r < 0){
-  //   pinball1.pos.y = pinball1.r;
-  // }
+  
   pinball1.update(secondsPassed);
   firePin1.update(secondsPassed);
-  // if (pinball1.pos.y - pinball1.r <= 0){
-  //   pinball1.vy = 0;
-  //   pinball1.pos.y = pinball1.r;
-  // }
+  
   if(pinball1.pos.y + pinball1.r <= 120 && !pinballHeightPass){
     turnOnGrav = true;
     let wallLaneGate = new Wall(500, 175, game.clientWidth, 100, 10, 5);
@@ -639,19 +632,16 @@ function coll_res_deadSpace(){
   //Initial lane
   ctx.fillStyle = 'brown';
   ctx.fillRect(500, 175, 15, 435);
-  // //deadspace
-  // ctx.fillStyle = 'darkgreen';
-  // ctx.fillRect(0, 500, 500, 112);
-  // ctx.closePath();
+  
   //the dead space
   daGutter.drawDS();
+  
   //pinball
   pinball1.drawPinball();
-  //left flipper
-  flipperA.drawFlipper();
-  //right flipper
-  flipperB.drawFlipper();
-//firing pin
+  
+//new flippers to be written 
+
+  //firing pin
   firePin1.drawFiringPin();
 
 
