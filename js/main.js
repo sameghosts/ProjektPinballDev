@@ -29,6 +29,7 @@ let pinballHeightPass = false;
 let turnOnGrav = false;
 //post gravity boolean - boolean that allows check for if gravity has been turned on and the wall drawn etc.
 let pinballPostGrav = false;
+
 //Firing Pin Variables
 let movementFP = 40;
 let movementFPpow = -60;
