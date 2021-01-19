@@ -33,137 +33,7 @@ let turnOnGrav = false;
 //post gravity boolean - boolean that allows check for if gravity has been turned on and the wall drawn etc.
 let pinballPostGrav = false;
 
-//Firing Pin Variables
-let movementFP = 40;
-let movementFPpow = -60;
-let pinX = 520;
-let pinY = 420;
-let pinWidth = 40;
-let pinHeight = 125;
-let pinColor = 'orange';
-
-/* Flipper A (left) variable nonsense */
-// top
-  //down
-  let topDownStartA = new Vector (135, 380);
-  let topDownEndA = new Vector (234, 459);
-    //up
-  let topUpStartA = new Vector (115, 360);
-  let topUpEndA = new Vector (214, 261);
-  
-  //bottom
-    //down
-  let botDownStartA = new Vector (115, 360);
-  let botDownEndA = new Vector (214, 479);
-    //up
-  let botUpStartA = new Vector (135, 380);
-  let botUpEndA = new Vector (234, 281);
-  
-  //side left 
-    //down
-    let sLDownStartA = new Vector(115, 360);
-    let sLDownEndtA = new Vector(135, 380);
-    //up
-    let sLUpStartA = new Vector(115, 360);
-    let sLUpEndA = new Vector(135, 380);
-    
-    //side right
-    //down
-    let sRDownStartA = new Vector(214, 479);
-    let sRDownEndA = new Vector(234, 459);
-    
-    //up
-    let sRUpStartA = new Vector(214, 261);
-    let sRUpEndA = new Vector(234, 281);
-
-//Pinball variables
-let ballX = 540;
-let ballY = 400;
-const radius = 15;
-const startAngle = 0;
-const endAngle = 2 * Math.PI;
-const cClock = false;
-const ballColor = '#a39d9b';
-const pbmass = 1;
-
-/* MOVEMENT HANDLERS ALPHABETIZED */
-
-//KEY PRESS MOVEMENT HANDLERS 
-
-let fired = false;
-let flipPressMovement = 95;    
-//STOP REPEAT
-document.addEventListener('keydown', (e) => {
-  
-  keyPresses[e.code] = true;
-  // console.log(keyPresses);
-  // movementFlipper();
-  movementFiringPinBack();
-  // movementPinball();
-  // movementPinball();
-  
-  });
-
-document.addEventListener('keyup', (e) => {
-  // fired = false;
-  keyPresses[e.code] = false;
-  // console.log(keyPresses);
-  // movementFlipperDown();
-  movementFiringPinRelease();
-  // console.log(fpin);
-});
-
-function movementFiringPinBack() {
-  if (keyPresses.KeyF === true && firePin1.center.y < 510) {
-    firePin1.center.y +=movementFP;
-    // console.log(firePin1.center.y);
-    // console.log(pinball1.pos);
-  } 
-}
-let resetFiringPin = () => {
-  firePin1.vy =0;
-  firePin1.center.y = 482.5;
-  }
-function movementFiringPinRelease() {
-  if (keyPresses.KeyF === false && firePin1.center.y > 475) {
-    firePin1.center.y += movementFPpow;
-    // firePin1.vy += -300;
-    // console.log(secondsPassed);
-    console.log(firePin1.vy);
-    
-    setTimeout(resetFiringPin, 200);
-    keyPresses.KeyF = true;
-  } 
-}
-/* FIX THE FLIPPER### MOVEMENT_Handler ###$$$*/
-//mvmt handlers for the flippers
-let movementFlipper = () => {
-  if(keyPresses.KeyZ === true && > -50){
-    flipperA.degrees -= flipPressMovement
-    // console.log(flipperA.degrees);
-    // console.log(pinball1.pos);
-    console.log(flipperA.center)
-    }
-  if(keyPresses.Slash === true && flipperB.degrees < 50){
-    flipperB.degrees += flipPressMovement
-    // console.log(flipperB.degrees);
-    console.log(flipperB.center)
-    }
-  }
-
-let movementFlipperDown = () => {
-  if(keyPresses.KeyZ === false){
-    flipperA.degrees = flipInitAng
-    console.log(flipperA.center)
-  }
-  if(keyPresses.Slash === false){
-    flipperB.degrees = -flipInitAng
-    console.log(flipperB.center)
-  }
-}
-
-
-/* Classes and constructors AlPHABETIZED*/
+//Vector Class
 //Vector Class for collision detection
 class Vector {
   constructor (x,y){
@@ -208,6 +78,156 @@ class Vector {
     ctx.stroke();
   }
 }
+
+//Firing Pin Variables
+let movementFP = 40;
+let movementFPpow = -60;
+let pinX = 520;
+let pinY = 420;
+let pinWidth = 40;
+let pinHeight = 125;
+let pinColor = 'orange';
+
+/* Flipper A (left) variable nonsense */
+// top
+  //down
+  let topDownStartA = new Vector (135, 380);
+  let topDownEndA = new Vector (234, 459);
+    //up
+  let topUpStartA = new Vector (115, 360);
+  let topUpEndA = new Vector (214, 261);
+  
+  //bottom
+    //down
+  let botDownStartA = new Vector (115, 360);
+  let botDownEndA = new Vector (214, 479);
+    //up
+  let botUpStartA = new Vector (135, 380);
+  let botUpEndA = new Vector (234, 281);
+  
+  //side left 
+    //down
+    let sLDownStartA = new Vector(115, 360);
+    let sLDownEndA = new Vector(135, 380);
+    //up
+    let sLUpStartA = new Vector(115, 360);
+    let sLUpEndA = new Vector(135, 380);
+    
+    //side right
+    //down
+    let sRDownStartA = new Vector(214, 479);
+    let sRDownEndA = new Vector(234, 459);
+    
+    //up
+    let sRUpStartA = new Vector(214, 261);
+    let sRUpEndA = new Vector(234, 281);
+
+//Pinball variables
+let ballX = 540;
+let ballY = 400;
+const radius = 15;
+const startAngle = 0;
+const endAngle = 2 * Math.PI;
+const cClock = false;
+const ballColor = '#a39d9b';
+const pbmass = 1;
+
+/* MOVEMENT HANDLERS ALPHABETIZED */
+
+//KEY PRESS MOVEMENT HANDLERS 
+
+let fired = false;
+let flipPressMovement = 95;    
+//STOP REPEAT
+document.addEventListener('keydown', (e) => {
+  
+  keyPresses[e.code] = true;
+  console.log(keyPresses);
+  movementFlipper();
+  movementFiringPinBack();
+  // movementPinball();
+  // movementPinball();
+  
+  });
+
+document.addEventListener('keyup', (e) => {
+  // fired = false;
+  keyPresses[e.code] = false;
+  console.log(keyPresses);
+  movementFlipperDown();
+  movementFiringPinRelease();
+  // console.log(fpin);
+});
+
+function movementFiringPinBack() {
+  if (keyPresses.KeyF === true && firePin1.center.y < 510) {
+    firePin1.center.y +=movementFP;
+    // console.log(firePin1.center.y);
+    // console.log(pinball1.pos);
+  } 
+}
+let resetFiringPin = () => {
+  firePin1.vy =0;
+  firePin1.center.y = 482.5;
+  }
+function movementFiringPinRelease() {
+  if (keyPresses.KeyF === false && firePin1.center.y > 475) {
+    firePin1.center.y += movementFPpow;
+    // firePin1.vy += -300;
+    // console.log(secondsPassed);
+    console.log(firePin1.vy);
+    
+    setTimeout(resetFiringPin, 200);
+    keyPresses.KeyF = true;
+  } 
+}
+/* FIX THE FLIPPER### MOVEMENT_Handler ###$$$*/
+//mvmt handlers for the flippers
+//top movement logic up flipATop.end.y > 450
+//top movement logic down flipATop.end.y < 270
+let movementFlipper = () => {
+  if(keyPresses.KeyZ === true){
+    flipATop.start = topUpStartA;
+    flipATop.end = topUpEndA;
+    // flipABot.start = botUpStartA;
+    // flipABot.end = botUpEndA;
+    // flipAsL.start = sLUpStartA;
+    // flipAsL.end = sLUpEndA;
+    // flipAsR.start = sRUpStartA;
+    // flipAsR.end = sRUpEndA;
+    
+    // console.log(flipperA.degrees);
+    // console.log(pinball1.pos);
+    console.log('we did it')
+    }
+  if(keyPresses.Slash === true && flipperB.degrees < 50){
+    flipperB.degrees += flipPressMovement
+    // console.log(flipperB.degrees);
+    console.log(flipperB.center)
+    }
+  }
+
+let movementFlipperDown = () => {
+  if(keyPresses.KeyZ === false){
+    flipATop.start = topDownStartA;
+    flipATop.end = topDownEndA;
+    // flipABot.start = botDownStartA;
+    // flipABot.end = botDownEndA;
+    // flipAsL.start = sLDownStartA;
+    // flipAsL.end = sLDownEndA;
+    // flipAsR.start = sRDownStartA;
+    // flipAsR.end = sRDownEndA;
+    console.log('and down');
+  }
+  if(keyPresses.Slash === false){
+    flipperB.degrees = -flipInitAng
+    console.log(flipperB.center)
+  }
+}
+
+
+/* Classes and constructors AlPHABETIZED*/
+
 //gravity vector!
 const gravity = new Vector (0, 9.81);
 // const gravity = new Vector(0, 9.81);
@@ -298,10 +318,20 @@ class flipWall {
     ctx.stroke();
     ctx.closePath();
   }
-  flipWallUnit (){
+  wallUnit (){
     return  this.end.subtr(this.start).unit();
   }
 }
+//flip A init
+//top movement logic up flipATop.end.y > 450
+//top movement logic down flipATop.end.y < 270
+let flipATop = new flipWall (topDownStartA.x, topDownStartA.y, topDownEndA.x, topDownEndA.y, 'orange', 2, 2);
+//bot
+// let flipABot = new flipWall (botDownStartA.x, botDownStartA.y, botDownEndA.x, botDownEndA.y, 'orange', 2, 2);
+//side left
+// let flipAsL = new flipWall (sLDownStartA.x, sLDownStartA.y, sLDownEndA.x, sLDownEndA.y, 'orange', 2, 2);
+//side right
+// let flipAsR = new flipWall (sRDownStartA.x, sRDownStartA.y, sRDownEndA.x, sRDownEndA.y, 'orange', 2, 2);
 
 // Pinball
   class pinBall {
@@ -625,7 +655,7 @@ function coll_res_deadSpace(){
   
   if(pinball1.pos.y + pinball1.r <= 120 && !pinballHeightPass){
     turnOnGrav = true;
-    let wallLaneGate = new Wall(500, 175, game.clientWidth, 100, 10, 5);
+    let wallLaneGate = new Wall(500, 175, game.clientWidth, 100, 45, 5);
   }
   //ceiling failsafe
   // if(pinball1.pos.y - pinball1.r <= 0){
@@ -691,31 +721,22 @@ function coll_res_deadSpace(){
   //left wall canvas
   let edge4 = new Wall(0, game.clientHeight, 0, 0, 5, 2);
   // late gate›
-  let wallInitLaneAng = new Wall(570, 60, 490, 0, 10, 5);
+  let wallInitLaneAng = new Wall(570, 60, 490, 0, 45, 5);
   //lane right wall
   let wallLaneRight = new Wall (499, 175, 499, 610, 5, 5);
-  flipWallArr.forEach((w) =>{
-    if(coll_det_PbW(pinball1, w)){
+  flipWallArr.forEach((f) =>{
+    if(coll_det_PbW(pinball1, f)){
       ctx.fillText("Collision", 300, 300);
 
       // pen_res_PbW(pinball1, w);
-      coll_res_PbW(pinball1, w);
+      coll_res_PbW(pinball1, f);
       // pinball1.reposition();
     }
-    })
-flipWallArr.forEach((w)=>{
-  w.drawWall();
 })
-//flip A init
-//top movement logic up flipATop.end.y > 450
-//top movement logic down flipATop.end.y < 270
-let flipATop = new flipWall (topDownEndA.x, topDownStartA.y, topDownEndA.x, topDownEndA.y, 'orange', 2, 2);
-//bot
-let flipABot = new flipWall (botDownStartA.x, botDownStartA.y, botDownEndA.x, botDownEndA.y, 'orange', 2, 2);
-//side left
-let flipAsL = new flipWall (sLDownStartA.x, sLDownStartA.y, sLDownEndA.x, sLDownEndA.y, 'orange', 2, 2);
-//side right
-let flipAsR = new flipWall (sRDownStartA.x, sRDownStartA.y, sRDownEndA.x, sRDownEndA.y, 'orange', 2, 2);
+flipWallArr.forEach((f)=>{
+  f.drawFlipWall();
+})
+
   
   //fliper lanes 4 lines or 8 lines that establish lanes that guide the pinball perhaps another constructor and array with different collision detection? for now keep as is. 
   //draw little squares as score / multiplier collision detection checks that are in the lane 
