@@ -10,6 +10,7 @@ let keyPresses = {
 
 //useless comment to test commit
 //I have no fucking idea what to do
+//ok is this ok? did we fix the issue
 
 // Establish canvas context
 
