@@ -9,6 +9,7 @@ let keyPresses = {
 }
 
 //useless comment to test commit
+//I have no fucking idea what to do
 
 // Establish canvas context
 
