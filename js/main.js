@@ -15,8 +15,10 @@ let ctx = game.getContext('2d')
 game.setAttribute('height', getComputedStyle(game)['height'])
 game.setAttribute('width', getComputedStyle(game)['width'])
 
+//object arrays
 const wallsArr = [];
 const pbsArr = [];
+const flipWallArr = [];
 console.log("canvas width " + game.clientWidth);
 console.log("canvas height " + game.clientHeight);
 
@@ -257,42 +259,66 @@ let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, 0);
 
 //Flippers
 //Start with rectangles? #### update these into sprites eventually? use the rectangle as hitbox
-class flipper {
-constructor(x, y, width, height, degrees, color, flipRX, flipRY){
-  this.x = x
-  this.y = y
-  this.width = width
-  this.height = height
-  this.degrees = degrees
-  this.center = new Vector(this.x+this.width/2, this.y+this.height/2)
-  //scalar angular value you can use to change rate of rotation over time ___ vector or
-  this.dAX = 0;
-  this.dYX = 0;
-  this.degAngudelta = new Vector (0,0);
-  this.color = color
-  this.flipRX = flipRX
-  this.flipRY = flipRY
-  FlArr.push(this)  
-}
-  drawFlipper = (x, y, width, height, degrees, color, flipRX, flipRY) => {
-    ctx.save();
-    ctx.beginPath();
-    ctx.translate(this.flipRX, this.flipRY);
-    ctx.rotate(this.degrees * (Math.PI/180));
-    ctx.rect(this.x-this.flipRX, this.y-this.flipRY, this.width, this.height);
-    ctx.fillStyle = this.color;
-    ctx.fill();
-    ctx.closePath();
-    //this could live somewhere else? 
-    ctx.translate(0, 0);
-    ctx.restore();
+// class flipper {
+// constructor(x, y, width, height, degrees, color, flipRX, flipRY){
+//   this.x = x
+//   this.y = y
+//   this.width = width
+//   this.height = height
+//   this.degrees = degrees
+//   this.center = new Vector(this.x+this.width/2, this.y+this.height/2)
+//   //scalar angular value you can use to change rate of rotation over time ___ vector or
+//   this.dAX = 0;
+//   this.dYX = 0;
+//   this.degAngudelta = new Vector (0,0);
+//   this.color = color
+//   this.flipRX = flipRX
+//   this.flipRY = flipRY
+//   FlArr.push(this)  
+// }
+//   drawFlipper = (x, y, width, height, degrees, color, flipRX, flipRY) => {
+//     ctx.save();
+//     ctx.beginPath();
+//     ctx.translate(this.flipRX, this.flipRY);
+//     ctx.rotate(this.degrees * (Math.PI/180));
+//     ctx.rect(this.x-this.flipRX, this.y-this.flipRY, this.width, this.height);
+//     ctx.fillStyle = this.color;
+//     ctx.fill();
+//     ctx.closePath();
+//     //this could live somewhere else? 
+//     ctx.translate(0, 0);
+//     ctx.restore();
+//   }
+// } 
+// let flipperA = new flipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAng, flipColor, flipAXR, flipAYR);
+
+// let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
+
+//Flipper as line / wall
+//FlipWall class 
+  // x1, y1 - start line; x2, y2, - end of line; colorS - color for stroke; ex, ey, - elasticity
+class flipWall {
+  constructor (x1, y1, x2, y2, colorS, ex, ey){
+    this.start = new Vector (x1, y1);
+    this.end = new Vector (x2, y2);
+    //flipwall elasticity tbd later
+    this.colorS = colorS; 
+    this.ex = ex;
+    this.ey = ey;
+    flipWallArr.push(this);
   }
-} 
-let flipperA = new flipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAng, flipColor, flipAXR, flipAYR);
-
-let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
-
-
+  drawFlipWall(){
+    ctx.beginPath();
+    ctx.moveTo(this.start.x, this.start.y);
+    ctx.lineTo(this.end.x, this.end.y);
+    ctx.strokeStyle = this.colorS;
+    ctx.stroke();
+    ctx.closePath();
+  }
+  flipWallUnit (){
+    return  this.end.subtr(this.start).unit();
+  }
+}
 
 // Pinball
   class pinBall {
