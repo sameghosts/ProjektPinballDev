@@ -1,4 +1,5 @@
 // Pinball project breakdown and psuedo code
+
 //Establish DOM reverences
 let game = document.getElementById('game')
 let leftScreen = document.getElementById('leftScreen')
@@ -14,8 +15,10 @@ let ctx = game.getContext('2d')
 game.setAttribute('height', getComputedStyle(game)['height'])
 game.setAttribute('width', getComputedStyle(game)['width'])
 
+//object arrays
 const wallsArr = [];
 const pbsArr = [];
+const flipWallArr = [];
 console.log("canvas width " + game.clientWidth);
 console.log("canvas height " + game.clientHeight);
 
@@ -30,121 +33,7 @@ let turnOnGrav = false;
 //post gravity boolean - boolean that allows check for if gravity has been turned on and the wall drawn etc.
 let pinballPostGrav = false;
 
-//Firing Pin Variables
-let movementFP = 40;
-let movementFPpow = -60;
-let pinX = 520;
-let pinY = 420;
-let pinWidth = 40;
-let pinHeight = 125;
-let pinColor = 'orange';
-
-//Flipper variables
-const flipAX = 125;
-const flipAY = 375;
-const flipAXR = flipAX;
-const flipAYR = flipAY +10;
-const flipBX = 245;
-const flipBY = 375;
-const flipBXR = flipBX + 135;
-const flipBYR = flipBY + 10;
-const flipWidth = 135;
-const flipHeight = 20;
-let flipInitAng = 45;
-const flipColor = 'red';
-let FlArr = [];
-
-//Pinball variables
-let ballX = 540;
-let ballY = 400;
-const radius = 15;
-const startAngle = 0;
-const endAngle = 2 * Math.PI;
-const cClock = false;
-const ballColor = '#a39d9b';
-const pbmass = 1;
-
-/* MOVEMENT HANDLERS ALPHABETIZED */
-
-//KEY PRESS MOVEMENT HANDLERS 
-
-let fired = false;
-let flipPressMovement = 95;    
-//STOP REPEAT
-document.addEventListener('keydown', (e) => {
-  
-  keyPresses[e.code] = true;
-  // console.log(keyPresses);
-  movementFlipper();
-  movementFiringPinBack();
-  // movementPinball();
-  // movementPinball();
-  
-  });
-
-document.addEventListener('keyup', (e) => {
-  // fired = false;
-  keyPresses[e.code] = false;
-  // console.log(keyPresses);
-  movementFlipperDown();
-  movementFiringPinRelease();
-  // console.log(fpin);
-});
-
-function movementFiringPinBack() {
-  if (keyPresses.KeyF === true && firePin1.center.y < 510) {
-    firePin1.center.y +=movementFP;
-    // console.log(firePin1.center.y);
-    // console.log(pinball1.pos);
-  } 
-}
-let resetFiringPin = () => {
-  firePin1.vy =0;
-  firePin1.center.y = 482.5;
-  }
-function movementFiringPinRelease() {
-  if (keyPresses.KeyF === false && firePin1.center.y > 475) {
-    firePin1.center.y += movementFPpow;
-    // firePin1.vy += -300;
-    // console.log(secondsPassed);
-    console.log(firePin1.vy);
-    
-    setTimeout(resetFiringPin, 200);
-    keyPresses.KeyF = true;
-  } 
-}
-let movementFlipper = () => {
-  if(keyPresses.KeyZ === true && flipperA.degrees > -50){
-    flipperA.degrees -= flipPressMovement
-    // console.log(flipperA.degrees);
-    // console.log(pinball1.pos);
-    console.log(flipperA.center)
-    }
-  if(keyPresses.Slash === true && flipperB.degrees < 50){
-    flipperB.degrees += flipPressMovement
-    // console.log(flipperB.degrees);
-    console.log(flipperB.center)
-    }
-  }
-
-let movementFlipperDown = () => {
-  if(keyPresses.KeyZ === false){
-    flipperA.degrees = flipInitAng
-    console.log(flipperA.center)
-  }
-  if(keyPresses.Slash === false){
-    flipperB.degrees = -flipInitAng
-    console.log(flipperB.center)
-  }
-}
-
-// function movementPinball(e) {
-//   if (e.key === 'w') {
-//     pinball1.y += 10;
-//   }
-// }
-
-/* Classes and constructors AlPHABETIZED*/
+//Vector Class
 //Vector Class for collision detection
 class Vector {
   constructor (x,y){
@@ -189,6 +78,202 @@ class Vector {
     ctx.stroke();
   }
 }
+
+//Firing Pin Variables
+let movementFP = 40;
+let movementFPpow = -60;
+let pinX = 520;
+let pinY = 420;
+let pinWidth = 40;
+let pinHeight = 125;
+let pinColor = 'orange';
+
+/* Flipper A (left) variable nonsense */
+// top
+  //down
+let topDownStartA = new Vector (135, 360);
+let topDownEndA = new Vector (234, 459);
+  //up
+let topUpStartA = new Vector (115, 360);
+let topUpEndA = new Vector (214, 261);
+
+//bottom
+  //down
+let botDownStartA = new Vector (115, 380);
+let botDownEndA = new Vector (214, 479);
+  //up
+let botUpStartA = new Vector (135, 380);
+let botUpEndA = new Vector (234, 281);
+
+//side left 
+  //down
+  let sLDownStartA = new Vector(115, 380);
+  let sLDownEndA = new Vector(135, 360);
+  //up
+  let sLUpStartA = new Vector(115, 360);
+  let sLUpEndA = new Vector(135, 380);
+  
+  //side right
+  //down
+  let sRDownStartA = new Vector(214, 479);
+  let sRDownEndA = new Vector(234, 459);
+  //up
+  let sRUpStartA = new Vector(214, 261);
+  let sRUpEndA = new Vector(234, 281);
+
+/* Flipper B Bs variables */
+//flipB - 35 distance x apart + 140
+// top
+//down
+let topDownStartB = new Vector (306, 459);
+let topDownEndB = new Vector (405, 360);
+  //up
+let topUpStartB = new Vector (326, 261);
+let topUpEndB = new Vector (425, 360);
+
+//bottom
+  //down
+let botDownStartB = new Vector (326, 479);
+let botDownEndB = new Vector (425, 380);
+  //up
+let botUpStartB = new Vector (306, 281);
+let botUpEndB = new Vector (405, 380);
+
+//side left 
+  //down
+  let sLDownStartB = new Vector(306, 459);
+  let sLDownEndB = new Vector(326, 479);
+  //up
+  let sLUpStartB = new Vector(306, 281);
+  let sLUpEndB = new Vector(326, 261);
+  
+  //side right
+  //down
+  let sRDownStartB = new Vector(405, 360);
+  let sRDownEndB = new Vector(425, 380);
+  //up
+  let sRUpStartB = new Vector(405, 380);
+  let sRUpEndB = new Vector(425, 360);
+  
+
+//Pinball variables
+let ballX = 540;
+let ballY = 400;
+const radius = 15;
+const startAngle = 0;
+const endAngle = 2 * Math.PI;
+const cClock = false;
+const ballColor = '#a39d9b';
+const pbmass = 1;
+
+/* MOVEMENT HANDLERS ALPHABETIZED */
+
+//KEY PRESS MOVEMENT HANDLERS 
+
+let fired = false;
+let flipPressMovement = 95;    
+//STOP REPEAT
+document.addEventListener('keydown', (e) => {
+  
+  keyPresses[e.code] = true;
+  console.log(keyPresses);
+  movementFlipper();
+  movementFiringPinBack();
+  // movementPinball();
+  // movementPinball();
+  
+  });
+
+document.addEventListener('keyup', (e) => {
+  // fired = false;
+  keyPresses[e.code] = false;
+  console.log(keyPresses);
+  movementFlipperDown();
+  movementFiringPinRelease();
+  // console.log(fpin);
+});
+
+function movementFiringPinBack() {
+  if (keyPresses.KeyF === true && firePin1.center.y < 510) {
+    firePin1.center.y +=movementFP;
+    // console.log(firePin1.center.y);
+    // console.log(pinball1.pos);
+  } 
+}
+let resetFiringPin = () => {
+  firePin1.vy =0;
+  firePin1.center.y = 482.5;
+  }
+function movementFiringPinRelease() {
+  if (keyPresses.KeyF === false && firePin1.center.y > 475) {
+    firePin1.center.y += movementFPpow;
+    // firePin1.vy += -300;
+    // console.log(secondsPassed);
+    console.log(firePin1.vy);
+    
+    setTimeout(resetFiringPin, 200);
+    keyPresses.KeyF = true;
+  } 
+}
+/* FIX THE FLIPPER### MOVEMENT_Handler ###$$$*/
+//mvmt handlers for the flippers
+//top movement logic up flipATop.end.y > 450
+//top movement logic down flipATop.end.y < 270
+let movementFlipper = () => {
+  if(keyPresses.KeyZ === true){
+    flipATop.start = topUpStartA;
+    flipATop.end = topUpEndA;
+    flipABot.start = botUpStartA;
+    flipABot.end = botUpEndA;
+    flipAsL.start = sLUpStartA;
+    flipAsL.end = sLUpEndA;
+    flipAsR.start = sRUpStartA;
+    flipAsR.end = sRUpEndA;
+    
+    // console.log(flipperA.degrees);
+    // console.log(pinball1.pos);
+    console.log('we did it')
+    }
+  if(keyPresses.Slash === true){
+    flipBTop.start = topUpStartB;
+    flipBTop.end = topUpEndB;
+    flipBBot.start = botUpStartB;
+    flipBBot.end = botUpEndB;
+    flipBsL.start = sLUpStartB;
+    flipBsL.end = sLUpEndB;
+    flipBsR.start = sRUpStartB;
+    flipBsR.end = sRUpEndB;
+    }
+  }
+
+let movementFlipperDown = () => {
+  if(keyPresses.KeyZ === false){
+    flipATop.start = topDownStartA;
+    flipATop.end = topDownEndA;
+    flipABot.start = botDownStartA;
+    flipABot.end = botDownEndA;
+    flipAsL.start = sLDownStartA;
+    flipAsL.end = sLDownEndA;
+    flipAsR.start = sRDownStartA;
+    flipAsR.end = sRDownEndA;
+    console.log('and down');
+  }
+  if(keyPresses.Slash === false){
+    flipBTop.start = topDownStartB;
+    flipBTop.end = topDownEndB;
+    flipBBot.start = botDownStartB;
+    flipBBot.end = botDownEndB;
+    flipBsL.start = sLDownStartB;
+    flipBsL.end = sLDownEndB;
+    flipBsR.start = sRDownStartB;
+    flipBsR.end = sRDownEndB;
+    
+  }
+}
+
+
+/* Classes and constructors AlPHABETIZED*/
+
 //gravity vector!
 const gravity = new Vector (0, 9.81);
 // const gravity = new Vector(0, 9.81);
@@ -257,45 +342,55 @@ class firingPin {
 }
 let firePin1 = new firingPin(pinX, pinY, pinWidth, pinHeight, pinColor, 0, 0);
 
-//Flippers
-//Start with rectangles? #### update these into sprites eventually? use the rectangle as hitbox
-class flipper {
-constructor(x, y, width, height, degrees, color, flipRX, flipRY){
-  this.x = x
-  this.y = y
-  this.width = width
-  this.height = height
-  this.degrees = degrees
-  this.center = new Vector(this.x+this.width/2, this.y+this.height/2)
-  //scalar angular value you can use to change rate of rotation over time ___ vector or
-  this.dAX = 0;
-  this.dYX = 0;
-  this.degAngudelta = new Vector (0,0);
-  this.color = color
-  this.flipRX = flipRX
-  this.flipRY = flipRY
-  FlArr.push(this)  
-}
-  drawFlipper = (x, y, width, height, degrees, color, flipRX, flipRY) => {
-    ctx.save();
-    ctx.beginPath();
-    ctx.translate(this.flipRX, this.flipRY);
-    ctx.rotate(this.degrees * (Math.PI/180));
-    ctx.rect(this.x-this.flipRX, this.y-this.flipRY, this.width, this.height);
-    ctx.fillStyle = this.color;
-    ctx.fill();
-    ctx.closePath();
-    //this could live somewhere else? 
-    ctx.translate(0, 0);
-    ctx.restore();
+
+//Flipper as line / wall
+//FlipWall class 
+  // x1, y1 - start line; x2, y2, - end of line; colorS - color for stroke; ex, ey, - elasticity
+class flipWall {
+  constructor (x1, y1, x2, y2, colorS, ex, ey){
+    this.start = new Vector (x1, y1);
+    this.end = new Vector (x2, y2);
+    //flipwall elasticity tbd later
+    this.colorS = colorS; 
+    this.ex = ex;
+    this.ey = ey;
+    flipWallArr.push(this);
   }
-} 
-let flipperA = new flipper(flipAX, flipAY, flipWidth, flipHeight, flipInitAng, flipColor, flipAXR, flipAYR);
+  drawFlipWall(){
+    ctx.beginPath();
+    ctx.moveTo(this.start.x, this.start.y);
+    ctx.lineTo(this.end.x, this.end.y);
+    ctx.strokeStyle = this.colorS;
+    ctx.stroke();
+    ctx.closePath();
+  }
+  wallUnit (){
+    return  this.end.subtr(this.start).unit();
+  }
+}
+//flip A init
+//top movement logic up flipATop.end.y > 450
+//top movement logic down flipATop.end.y < 270
+let flipATop = new flipWall (topDownStartA.x, topDownStartA.y, topDownEndA.x, topDownEndA.y, 'orange', 2, 2);
+//bot
+let flipABot = new flipWall (botDownStartA.x, botDownStartA.y, botDownEndA.x, botDownEndA.y, 'orange', 2, 2);
+//side left
+let flipAsL = new flipWall (sLDownStartA.x, sLDownStartA.y, sLDownEndA.x, sLDownEndA.y, 'orange', 2, 2);
+//side right
+let flipAsR = new flipWall (sRDownStartA.x, sRDownStartA.y, sRDownEndA.x, sRDownEndA.y, 'orange', 2, 2);
 
-let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, flipColor, flipBXR, flipBYR);
+//flip A init
+//top movement logic up flipATop.end.y > 450
+//top movement logic down flipATop.end.y < 270
+let flipBTop = new flipWall (topDownStartB.x, topDownStartB.y, topDownEndB.x, topDownEndB.y, 'orange', 2, 2);
+//bot
+let flipBBot = new flipWall (botDownStartB.x, botDownStartB.y, botDownEndB.x, botDownEndB.y, 'orange', 2, 2);
+//side left
+let flipBsL = new flipWall (sLDownStartB.x, sLDownStartB.y, sLDownEndB.x, sLDownEndB.y, 'orange', 2, 2);
+//side right
+let flipBsR = new flipWall (sRDownStartB.x, sRDownStartB.y, sRDownEndB.x, sRDownEndB.y, 'orange', 2, 2);
 
-
-
+//bot
 // Pinball
   class pinBall {
   constructor (x,y,r,color,m, vx, vy){
@@ -612,18 +707,13 @@ function coll_res_deadSpace(){
   // secondsPassed = Math.min(secondsPassed, 0.1);
  let secondsPassed = (timeStamp-oldTimeStamp)/1000;
   oldTimeStamp = timeStamp;
-  // if (pinball1.pos.y + pinball1.r < 0){
-  //   pinball1.pos.y = pinball1.r;
-  // }
+  
   pinball1.update(secondsPassed);
   firePin1.update(secondsPassed);
-  // if (pinball1.pos.y - pinball1.r <= 0){
-  //   pinball1.vy = 0;
-  //   pinball1.pos.y = pinball1.r;
-  // }
+  
   if(pinball1.pos.y + pinball1.r <= 120 && !pinballHeightPass){
     turnOnGrav = true;
-    let wallLaneGate = new Wall(500, 175, game.clientWidth, 100, 10, 5);
+    let wallLaneGate = new Wall(500, 175, game.clientWidth, 100, 45, 5);
   }
   //ceiling failsafe
   // if(pinball1.pos.y - pinball1.r <= 0){
@@ -639,19 +729,16 @@ function coll_res_deadSpace(){
   //Initial lane
   ctx.fillStyle = 'brown';
   ctx.fillRect(500, 175, 15, 435);
-  // //deadspace
-  // ctx.fillStyle = 'darkgreen';
-  // ctx.fillRect(0, 500, 500, 112);
-  // ctx.closePath();
+  
   //the dead space
   daGutter.drawDS();
+  
   //pinball
   pinball1.drawPinball();
-  //left flipper
-  flipperA.drawFlipper();
-  //right flipper
-  flipperB.drawFlipper();
-//firing pin
+  
+//new flippers to be written 
+
+  //firing pin
   firePin1.drawFiringPin();
 
 
@@ -692,9 +779,22 @@ function coll_res_deadSpace(){
   //left wall canvas
   let edge4 = new Wall(0, game.clientHeight, 0, 0, 5, 2);
   // late gate›
-  let wallInitLaneAng = new Wall(570, 60, 490, 0, 10, 5);
+  let wallInitLaneAng = new Wall(570, 60, 490, 0, 45, 5);
   //lane right wall
   let wallLaneRight = new Wall (499, 175, 499, 610, 5, 5);
+  flipWallArr.forEach((f) =>{
+    if(coll_det_PbW(pinball1, f)){
+      ctx.fillText("Collision", 300, 300);
+
+      // pen_res_PbW(pinball1, w);
+      coll_res_PbW(pinball1, f);
+      // pinball1.reposition();
+    }
+})
+flipWallArr.forEach((f)=>{
+  f.drawFlipWall();
+})
+
   
   //fliper lanes 4 lines or 8 lines that establish lanes that guide the pinball perhaps another constructor and array with different collision detection? for now keep as is. 
   //draw little squares as score / multiplier collision detection checks that are in the lane 
