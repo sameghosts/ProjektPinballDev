@@ -125,36 +125,35 @@ let botUpEndA = new Vector (234, 281);
 //flipB - 35 distance x apart + 140
 // top
 //down
-let topDownStartB = new Vector (336, 459);
-let topDownEndB = new Vector (435, 360);
+let topDownStartB = new Vector (306, 459);
+let topDownEndB = new Vector (405, 360);
   //up
-let topUpStartB = new Vector (356, 261);
-let topUpEndB = new Vector (455, 360);
+let topUpStartB = new Vector (326, 261);
+let topUpEndB = new Vector (425, 360);
 
 //bottom
   //down
-let botDownStartB = new Vector (356, 479);
-let botDownEndB = new Vector (455, 380);
+let botDownStartB = new Vector (326, 479);
+let botDownEndB = new Vector (425, 380);
   //up
-let botUpStartB = new Vector (336, 281);
-let botUpEndB = new Vector (435, 380);
+let botUpStartB = new Vector (306, 281);
+let botUpEndB = new Vector (405, 380);
 
 //side left 
   //down
-  let sLDownStartB = new Vector(336, 459);
-  let sLDownEndB = new Vector(356, 479);
+  let sLDownStartB = new Vector(306, 459);
+  let sLDownEndB = new Vector(326, 479);
   //up
-  let sLUpStartB = new Vector(336, 281);
-  let sLUpEndB = new Vector(356, 261);
+  let sLUpStartB = new Vector(306, 281);
+  let sLUpEndB = new Vector(326, 261);
   
   //side right
   //down
-  let sRDownStartB = new Vector(435, 360);
-  let sRDownEndB = new Vector(455, 380);
-  
+  let sRDownStartB = new Vector(405, 360);
+  let sRDownEndB = new Vector(425, 380);
   //up
-  let sRUpStartB = new Vector(435, 380);
-  let sRUpEndB = new Vector(455, 360);
+  let sRUpStartB = new Vector(405, 380);
+  let sRUpEndB = new Vector(425, 360);
   
 
 //Pinball variables
