@@ -82,3 +82,40 @@ let flipperB = new flipper(flipBX, flipBY, flipWidth, flipHeight, -flipInitAng, 
   // flipperA.drawFlipper();
   // //right flipper
   // flipperB.drawFlipper();
+// top
+
+//flipB - 35 distance x apart + 140
+  //down
+  let topDownStartB = new Vector (259, 459);
+  let topDownEndB = new Vector (310, 360);
+    //up
+  let topUpStartB = new Vector (239, 261);
+  let topUpEndB = new Vector (290, 360)
+  
+  
+  //bottom
+    //down
+  let botDownStartB = new Vector (115, 40);
+  let botDownEndB = new Vector (214, 479);
+    //up
+  let botUpStartB = new Vector (135, 380);
+  let botUpEndB = new Vector (234, 281);
+  
+  //side left 
+    //down
+    let sLDownStartB = new Vector(115, 380);
+    let sLDownEndtB = new Vector(135, 360);
+    //up
+    let sLUpStartB = new Vector(115, 360);
+    let sLUpEndB = new Vector(135, 380);
+    
+    //side right
+    //down
+    let sRDownStartB = new Vector(214, 479);
+    let sRDownEndB = new Vector(234, 459);
+    
+    //up
+    let sRUpStartB = new Vector(214, 261);
+    let sRUpEndB = new Vector(234, 281);
+  
+    

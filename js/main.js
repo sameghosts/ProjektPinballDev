@@ -91,36 +91,71 @@ let pinColor = 'orange';
 /* Flipper A (left) variable nonsense */
 // top
   //down
-  let topDownStartA = new Vector (135, 380);
-  let topDownEndA = new Vector (234, 459);
-    //up
-  let topUpStartA = new Vector (115, 360);
-  let topUpEndA = new Vector (214, 261);
+let topDownStartA = new Vector (135, 360);
+let topDownEndA = new Vector (234, 459);
+  //up
+let topUpStartA = new Vector (115, 360);
+let topUpEndA = new Vector (214, 261);
+
+//bottom
+  //down
+let botDownStartA = new Vector (115, 380);
+let botDownEndA = new Vector (214, 479);
+  //up
+let botUpStartA = new Vector (135, 380);
+let botUpEndA = new Vector (234, 281);
+
+//side left 
+  //down
+  let sLDownStartA = new Vector(115, 380);
+  let sLDownEndA = new Vector(135, 360);
+  //up
+  let sLUpStartA = new Vector(115, 360);
+  let sLUpEndA = new Vector(135, 380);
   
-  //bottom
-    //down
-  let botDownStartA = new Vector (115, 360);
-  let botDownEndA = new Vector (214, 479);
-    //up
-  let botUpStartA = new Vector (135, 380);
-  let botUpEndA = new Vector (234, 281);
+  //side right
+  //down
+  let sRDownStartA = new Vector(214, 479);
+  let sRDownEndA = new Vector(234, 459);
+  //up
+  let sRUpStartA = new Vector(214, 261);
+  let sRUpEndA = new Vector(234, 281);
+
+/* Flipper B Bs variables */
+//flipB - 35 distance x apart + 140
+// top
+//down
+let topDownStartB = new Vector (336, 459);
+let topDownEndB = new Vector (435, 360);
+  //up
+let topUpStartB = new Vector (356, 261);
+let topUpEndB = new Vector (455, 360);
+
+//bottom
+  //down
+let botDownStartB = new Vector (356, 479);
+let botDownEndB = new Vector (455, 380);
+  //up
+let botUpStartB = new Vector (336, 281);
+let botUpEndB = new Vector (435, 380);
+
+//side left 
+  //down
+  let sLDownStartB = new Vector(336, 459);
+  let sLDownEndB = new Vector(356, 479);
+  //up
+  let sLUpStartB = new Vector(336, 281);
+  let sLUpEndB = new Vector(356, 261);
   
-  //side left 
-    //down
-    let sLDownStartA = new Vector(115, 360);
-    let sLDownEndA = new Vector(135, 380);
-    //up
-    let sLUpStartA = new Vector(115, 360);
-    let sLUpEndA = new Vector(135, 380);
-    
-    //side right
-    //down
-    let sRDownStartA = new Vector(214, 479);
-    let sRDownEndA = new Vector(234, 459);
-    
-    //up
-    let sRUpStartA = new Vector(214, 261);
-    let sRUpEndA = new Vector(234, 281);
+  //side right
+  //down
+  let sRDownStartB = new Vector(435, 360);
+  let sRDownEndB = new Vector(455, 380);
+  
+  //up
+  let sRUpStartB = new Vector(435, 380);
+  let sRUpEndB = new Vector(455, 360);
+  
 
 //Pinball variables
 let ballX = 540;
@@ -189,21 +224,26 @@ let movementFlipper = () => {
   if(keyPresses.KeyZ === true){
     flipATop.start = topUpStartA;
     flipATop.end = topUpEndA;
-    // flipABot.start = botUpStartA;
-    // flipABot.end = botUpEndA;
-    // flipAsL.start = sLUpStartA;
-    // flipAsL.end = sLUpEndA;
-    // flipAsR.start = sRUpStartA;
-    // flipAsR.end = sRUpEndA;
+    flipABot.start = botUpStartA;
+    flipABot.end = botUpEndA;
+    flipAsL.start = sLUpStartA;
+    flipAsL.end = sLUpEndA;
+    flipAsR.start = sRUpStartA;
+    flipAsR.end = sRUpEndA;
     
     // console.log(flipperA.degrees);
     // console.log(pinball1.pos);
     console.log('we did it')
     }
-  if(keyPresses.Slash === true && flipperB.degrees < 50){
-    flipperB.degrees += flipPressMovement
-    // console.log(flipperB.degrees);
-    console.log(flipperB.center)
+  if(keyPresses.Slash === true){
+    flipBTop.start = topUpStartB;
+    flipBTop.end = topUpEndB;
+    flipBBot.start = botUpStartB;
+    flipBBot.end = botUpEndB;
+    flipBsL.start = sLUpStartB;
+    flipBsL.end = sLUpEndB;
+    flipBsR.start = sRUpStartB;
+    flipBsR.end = sRUpEndB;
     }
   }
 
@@ -211,17 +251,24 @@ let movementFlipperDown = () => {
   if(keyPresses.KeyZ === false){
     flipATop.start = topDownStartA;
     flipATop.end = topDownEndA;
-    // flipABot.start = botDownStartA;
-    // flipABot.end = botDownEndA;
-    // flipAsL.start = sLDownStartA;
-    // flipAsL.end = sLDownEndA;
-    // flipAsR.start = sRDownStartA;
-    // flipAsR.end = sRDownEndA;
+    flipABot.start = botDownStartA;
+    flipABot.end = botDownEndA;
+    flipAsL.start = sLDownStartA;
+    flipAsL.end = sLDownEndA;
+    flipAsR.start = sRDownStartA;
+    flipAsR.end = sRDownEndA;
     console.log('and down');
   }
   if(keyPresses.Slash === false){
-    flipperB.degrees = -flipInitAng
-    console.log(flipperB.center)
+    flipBTop.start = topDownStartB;
+    flipBTop.end = topDownEndB;
+    flipBBot.start = botDownStartB;
+    flipBBot.end = botDownEndB;
+    flipBsL.start = sLDownStartB;
+    flipBsL.end = sLDownEndB;
+    flipBsR.start = sRDownStartB;
+    flipBsR.end = sRDownEndB;
+    
   }
 }
 
@@ -327,12 +374,24 @@ class flipWall {
 //top movement logic down flipATop.end.y < 270
 let flipATop = new flipWall (topDownStartA.x, topDownStartA.y, topDownEndA.x, topDownEndA.y, 'orange', 2, 2);
 //bot
-// let flipABot = new flipWall (botDownStartA.x, botDownStartA.y, botDownEndA.x, botDownEndA.y, 'orange', 2, 2);
+let flipABot = new flipWall (botDownStartA.x, botDownStartA.y, botDownEndA.x, botDownEndA.y, 'orange', 2, 2);
 //side left
-// let flipAsL = new flipWall (sLDownStartA.x, sLDownStartA.y, sLDownEndA.x, sLDownEndA.y, 'orange', 2, 2);
+let flipAsL = new flipWall (sLDownStartA.x, sLDownStartA.y, sLDownEndA.x, sLDownEndA.y, 'orange', 2, 2);
 //side right
-// let flipAsR = new flipWall (sRDownStartA.x, sRDownStartA.y, sRDownEndA.x, sRDownEndA.y, 'orange', 2, 2);
+let flipAsR = new flipWall (sRDownStartA.x, sRDownStartA.y, sRDownEndA.x, sRDownEndA.y, 'orange', 2, 2);
 
+//flip A init
+//top movement logic up flipATop.end.y > 450
+//top movement logic down flipATop.end.y < 270
+let flipBTop = new flipWall (topDownStartB.x, topDownStartB.y, topDownEndB.x, topDownEndB.y, 'orange', 2, 2);
+//bot
+let flipBBot = new flipWall (botDownStartB.x, botDownStartB.y, botDownEndB.x, botDownEndB.y, 'orange', 2, 2);
+//side left
+let flipBsL = new flipWall (sLDownStartB.x, sLDownStartB.y, sLDownEndB.x, sLDownEndB.y, 'orange', 2, 2);
+//side right
+let flipBsR = new flipWall (sRDownStartB.x, sRDownStartB.y, sRDownEndB.x, sRDownEndB.y, 'orange', 2, 2);
+
+//bot
 // Pinball
   class pinBall {
   constructor (x,y,r,color,m, vx, vy){
